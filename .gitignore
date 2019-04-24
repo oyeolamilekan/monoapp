@@ -112,7 +112,7 @@ media/
 staticfiles
 
 # Elastic Beanstalk Files
-static/
+
 .elasticbeanstalk/*
 
 !.elasticbeanstalk/*.cfg.yml
