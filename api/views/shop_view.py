@@ -27,7 +27,7 @@ def create_shop(request):
             'msg': 'This shop already exist'
         })
     shop = Shop.objects.create(
-        title=request.data['shopName'],
+        title=request.data['shopName'].lower(),
         user=request.user)
     shop.save()
     return Response({
