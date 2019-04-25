@@ -20,7 +20,7 @@ def create_shop(request):
     '''
 
     shop = Shop.objects.filter(
-        title=request.data['shopName'])
+        title=request.data['shopName'].lower())
     if shop.exists():
         return Response({
             'is_exist': True,

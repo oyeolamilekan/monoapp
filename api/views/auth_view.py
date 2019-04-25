@@ -5,7 +5,7 @@
 from rest_framework import generics
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
-
+from shop.models import Shop
 from api.serializers import LoginSerializer, RegisterSerializer, UserSerializer
 # Resgister api
 class RegisterAPI(generics.GenericAPIView):
@@ -61,10 +61,15 @@ class LoginAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
         token, _ = Token.objects.get_or_create(user=user)
+        try:
+            shop_obj = Shop.objects.get(user=user)
+        except Exception as e: 
+            shop_obj = ''
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
             "name": user.name,
             "is_admin": user.is_superuser,
             "is_commerce": user.is_commerce,
-            "token": token.key
+            "token": token.key,
+            "shop_name": shop_obj.title if shop_obj else ''
         })

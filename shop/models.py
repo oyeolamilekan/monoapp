@@ -27,7 +27,7 @@ class Shop(BaseModel):
 
 # creats a slug url for the section
 def create_slug(instance, new_slug=None):
-    slug = slugify(instance.title)
+    slug = slugify(instance.title.lower()) 
     if new_slug is not None:
         slug = new_slug
     qs = Shop.objects.filter(slug=slug).order_by("-created")
