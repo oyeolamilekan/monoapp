@@ -23,6 +23,7 @@ def get_shop_info(request, slug):
     shop_info = Shop.objects.get(title=slug)
     data_obj = {
         'shop_name': shop_info.title,
+        'logo': shop_info.logo,
         'tags': shop_info.categories
     }
     return Response(data={'shop_info': data_obj}, status=status.HTTP_200_OK)
