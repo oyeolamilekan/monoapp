@@ -72,5 +72,5 @@ class LoginAPI(generics.GenericAPIView):
             "is_commerce": user.is_commerce,
             "token": token.key,
             "shop_name": shop_obj.title if shop_obj else '',
-            "shop_logo": shop_obj.logo if shop_obj.logo else '',
+            "shop_logo": shop_obj.logo.url if shop_obj.logo else '',
         })

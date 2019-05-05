@@ -23,8 +23,8 @@ def get_shop_info(request, slug):
     shop_info = Shop.objects.get(title=slug)
     data_obj = {
         'shop_name': shop_info.title,
-        'logo': shop_info.logo.url,
-        'tags': shop_info.categories
+        'logo': shop_info.logo.url if shop_info.logo else '',
+        'tags': shop_info.categories if shop_info.categories else ''
     }
     return Response(data={'shop_info': data_obj}, status=status.HTTP_200_OK)
 
@@ -44,7 +44,9 @@ def get_shop_products(request, slug, cat):
     '''
     shop = Shop.objects.get(title=slug)
     products = Products.objects.filter(shop_rel=shop)
-    if cat in shop.categories:
+    if not shop.categories:
+        products = []
+    elif cat in shop.categories:
         products = products.filter(genre=cat)
     paginator = pagination.PageNumberPagination()
     paginator.page_size = 10

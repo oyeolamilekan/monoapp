@@ -131,4 +131,7 @@ def save_info(request):
     if request.data['logo']:
         user_info_obj.logo = request.data['logo']
     user_info_obj.save()
-    return Response(status=status.HTTP_200_OK)
+    data_payload = {
+        'img': user_info_obj.logo.url if user_info_obj.logo else ''
+    }
+    return Response(status=status.HTTP_200_OK, data=data_payload)
