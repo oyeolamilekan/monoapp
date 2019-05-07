@@ -42,8 +42,9 @@ urlpatterns = [
     path('catergory_list/', shop_view.get_catergories, name='catergory_list'),
     path('get_info/', shop_view.get_info, name='get_info'),
     path('save_info/', shop_view.save_info, name='save_info'),
+    
     # Shop routes for the customers of the sellers.
     path('shop_info/<slug:slug>/', store_view.get_shop_info, name='shop_infor'),
     path('shop_product/<slug:slug>/<slug:cat>/', store_view.get_shop_products, name='shop_products'),
-    path('shop_product/<slug:slug>/', shop_view.EditShopInfo.as_view(), name='edit_shop')
+    path('edit_products/', shop_view.edit_products, name='edit_produts')
 ]

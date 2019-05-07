@@ -135,3 +135,22 @@ def save_info(request):
         'img': user_info_obj.logo.url if user_info_obj.logo else ''
     }
     return Response(status=status.HTTP_200_OK, data=data_payload)
+
+
+@api_view(['POST'])
+def edit_products(request):
+    print('hello')
+    try:
+        products = Products.objects.get(id=request.data['id'])
+        products.name = request.data['productName']
+        products.price = request.data['productPrice']
+        products.description = request.data['description']
+        products.genre = request.data['tags']
+        if request.data['file']:
+            products.image = request.data['file']
+        products.save() 
+        products_serailzer = ProductSerializer(products)
+        return Response(status=status.HTTP_201_CREATED, data={'product': products_serailzer.data})
+    except Exception as e:
+        print(e)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
