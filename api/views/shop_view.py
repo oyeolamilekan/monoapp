@@ -161,5 +161,5 @@ def delete_products(request):
     if request.user == product_obj.shop_rel.user:
         product_obj.delete()
         return Response(status=status.HTTP_200_OK)
-    else:
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
