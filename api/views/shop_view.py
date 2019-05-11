@@ -139,7 +139,6 @@ def save_info(request):
 
 @api_view(['POST'])
 def edit_products(request):
-    print('hello')
     try:
         products = Products.objects.get(id=request.data['id'])
         products.name = request.data['productName']
@@ -148,9 +147,19 @@ def edit_products(request):
         products.genre = request.data['tags']
         if request.data['file']:
             products.image = request.data['file']
-        products.save() 
+        products.save()
         products_serailzer = ProductSerializer(products)
         return Response(status=status.HTTP_201_CREATED, data={'product': products_serailzer.data})
     except Exception as e:
         print(e)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["DELETE"])
+def delete_products(request):
+    product_obj = Products.objects.get(id=request.data['id'])
+    if request.user == product_obj.shop_rel.user:
+        product_obj.delete()
+        return Response(status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
