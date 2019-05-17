@@ -16,7 +16,7 @@ class Shop(BaseModel):
     logo = models.ImageField(blank=True)
     address = models.TextField(blank=True)
     description = models.TextField(blank=True)
-    categories = ArrayField(models.CharField(max_length=200), blank=True, null=True)
+    categories = ArrayField(models.CharField(max_length=200), blank=True, null=True, default=list)
     objects = models.Manager()
 
     class Meta:

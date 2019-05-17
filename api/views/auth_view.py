@@ -5,26 +5,35 @@
 from rest_framework import generics
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+
+from accounts.models import User
+from api.serializers import (ChangePasswordSerializer, LoginSerializer,
+                             RegisterSerializer, UserSerializer)
 from shop.models import Shop
-from api.serializers import LoginSerializer, RegisterSerializer, UserSerializer
+
 # Resgister api
+
+
 class RegisterAPI(generics.GenericAPIView):
     '''[This Class based view handles the registration functionality]
-    
+
     Arguments:
         generics {[type]} -- [description]
-    
+
     Returns:
         [JSON] -- [It returns json objects based on the action taking by user]
     '''
 
     serializer_class = RegisterSerializer
+
     def post(self, request):
         '''[This method recives the request from the user and processes it]
-         
+
         Arguments:
             request {[request object]} -- [The request sent by the user]
-        
+
         Returns:
             [JSON] -- [returns json reponse with the needed crendentials]
         '''
@@ -49,10 +58,10 @@ class LoginAPI(generics.GenericAPIView):
 
     def post(self, request):
         '''[summary]
-        
+
         Arguments:
             request {[type]} -- [description]
-        
+
         Returns:
             [type] -- [description]
         '''
@@ -63,7 +72,7 @@ class LoginAPI(generics.GenericAPIView):
         token, _ = Token.objects.get_or_create(user=user)
         try:
             shop_obj = Shop.objects.get(user=user)
-        except Exception as e: 
+        except Exception as e:
             shop_obj = ''
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
@@ -72,5 +81,34 @@ class LoginAPI(generics.GenericAPIView):
             "is_commerce": user.is_commerce,
             "token": token.key,
             "shop_name": shop_obj.title if shop_obj else '',
+            "shop_slug": shop_obj.slug,
             "shop_logo": shop_obj.logo.url if shop_obj.logo else '',
         })
+
+
+class ChangePasswordView(generics.UpdateAPIView):
+    """
+    An endpoint for changing password.
+    """
+    serializer_class = ChangePasswordSerializer
+    model = User
+    permission_classes = (IsAuthenticated,)
+
+    def get_object(self, queryset=None):
+        obj = self.request.user
+        return obj
+
+    def update(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            # Check old password
+            if not self.object.check_password(serializer.data.get("old_password")):
+                return Response({"old_password": ["Wrong password."]}, status=status.HTTP_400_BAD_REQUEST)
+            # set_password also hashes the password that the user will get
+            self.object.set_password(serializer.data.get("new_password"))
+            self.object.save()
+            return Response("Success.", status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

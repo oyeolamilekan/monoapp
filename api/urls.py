@@ -31,8 +31,11 @@ urlpatterns = [
     path('create_o/', user_views.create_genre, name='catergory'),
     path('list/', user_views.get_user_choice, name='list'),
     path('user_products/', user_views.get_user_products, name="product_list"),
+
+    # Auth login path
     path('register/', auth_view.RegisterAPI.as_view()),
     path('login/', auth_view.LoginAPI.as_view()),
+    path('change_password/', auth_view.ChangePasswordView, name="change_password"),
 
     # Admin routes for the seller.
     path('create_shop/', shop_view.create_shop, name='create_shop'),

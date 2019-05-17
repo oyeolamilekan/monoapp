@@ -20,7 +20,7 @@ def get_shop_info(request, slug):
     Returns:
         [JSON] -- [Gives the user back a json response of the shop info needed]
     '''
-    shop_info = Shop.objects.get(title=slug)
+    shop_info = Shop.objects.get(slug=slug)
     data_obj = {
         'shop_name': shop_info.title,
         'logo': shop_info.logo.url if shop_info.logo else '',
@@ -42,7 +42,7 @@ def get_shop_products(request, slug, cat):
     Returns:
         [JSON] -- [Gives the user back a json response of the shop products needed]
     '''
-    shop = Shop.objects.get(title=slug)
+    shop = Shop.objects.get(slug=slug)
     products = Products.objects.filter(shop_rel=shop)
     if not shop.categories:
         products = []

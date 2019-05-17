@@ -6,7 +6,6 @@ from api.serializers import ProductSerializer, CatergoriesSerializer, ShopSerial
 from shop.models import Shop
 from tags.models import Catergories
 
-
 @api_view(['POST'])
 def create_shop(request):
     '''
@@ -32,7 +31,8 @@ def create_shop(request):
     shop.save()
     return Response({
         'is_exist': False,
-        'msg': 'Success.'
+        'msg': 'Success.',
+        'slug': shop.slug
     })
 
 
