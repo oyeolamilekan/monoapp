@@ -1,4 +1,4 @@
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField, JSONField
 from django.db import models
 from django.db.models.signals import pre_save
 from django.utils.text import slugify
@@ -10,13 +10,22 @@ from findit.models import BaseModel
 
 
 class Shop(BaseModel):
+    """[summary]
+    
+    Arguments:
+        BaseModel {[ Inherited from the model ]} -- [the id is included]
+    
+    Returns:
+        [type] -- [description]
+    """
     user = models.ForeignKey(User, on_delete=True, null=True)
     title = models.CharField(max_length=300)
+    category = models.CharField(max_length=300, default='')
     slug = models.SlugField(max_length=40)
     logo = models.ImageField(blank=True)
     address = models.TextField(blank=True)
     description = models.TextField(blank=True)
-    categories = ArrayField(models.CharField(max_length=200), blank=True, null=True, default=list)
+    categories = JSONField(default=dict)
     objects = models.Manager()
 
     class Meta:

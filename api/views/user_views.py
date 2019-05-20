@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from accounts.models import User
 from findit.models import Products, UserPicks
-from api.serializers import ProductSerializer
+from api.serializers.commerce import ProductSerializer
 
 
 class StandardResultsSetPagination(pagination.PageNumberPagination):

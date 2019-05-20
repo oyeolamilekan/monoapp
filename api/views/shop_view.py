@@ -2,7 +2,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import pagination, status, viewsets, generics
 from findit.models import Products
-from api.serializers import ProductSerializer, CatergoriesSerializer, ShopSerializer
+from api.serializers.commerce import ProductSerializer, CatergoriesSerializer
+from api.serializers.store import ShopSerializer
 from shop.models import Shop
 from tags.models import Catergories
 
@@ -25,8 +26,10 @@ def create_shop(request):
             'is_exist': True,
             'msg': 'This shop already exist'
         })
+    print(request.data)
     shop = Shop.objects.create(
         title=request.data['shopName'].lower(),
+        category=request.data['shopCategory'],
         user=request.user)
     shop.save()
     return Response({

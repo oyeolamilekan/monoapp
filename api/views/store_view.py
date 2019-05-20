@@ -3,7 +3,7 @@ from rest_framework import pagination, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from api.serializers import ProductSerializer
+from api.serializers.commerce import ProductSerializer
 from findit.models import Products
 from shop.models import Shop
 
@@ -24,7 +24,8 @@ def get_shop_info(request, slug):
     data_obj = {
         'shop_name': shop_info.title,
         'logo': shop_info.logo.url if shop_info.logo else '',
-        'tags': shop_info.categories if shop_info.categories else ''
+        'tags': shop_info.categories if shop_info.categories else '',
+        'slug': shop_info.slug
     }
     return Response(data={'shop_info': data_obj}, status=status.HTTP_200_OK)
 

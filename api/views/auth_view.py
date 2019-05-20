@@ -9,8 +9,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 
 from accounts.models import User
-from api.serializers import (ChangePasswordSerializer, LoginSerializer,
-                             RegisterSerializer, UserSerializer)
+from api.serializers.auth import ChangePasswordSerializer, RegisterSerializer, LoginSerializer, UserSerializer
 from shop.models import Shop
 
 # Resgister api
@@ -96,6 +95,7 @@ class ChangePasswordView(generics.UpdateAPIView):
 
     def get_object(self, queryset=None):
         obj = self.request.user
+        print(self.request.data)
         return obj
 
     def update(self, request, *args, **kwargs):

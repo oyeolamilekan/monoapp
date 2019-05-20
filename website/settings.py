@@ -31,7 +31,7 @@ ALLOWED_HOSTS = ['*']
 
 # Application definition
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ORIGIN_WHITELIST = ('*')
+CORS_ORIGIN_WHITELIST = ('shopstack.co')
 
 ALGOLIA = {
     'APPLICATION_ID': 'QQYFIYG9RO',
