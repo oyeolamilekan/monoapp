@@ -4,7 +4,7 @@ from django.utils.text import slugify
 from rest_framework import pagination, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-
+from django.utils.crypto import get_random_string
 from api.serializers.commerce import ProductSerializer
 from api.serializers.store import ShopSerializer
 from findit.models import Products
@@ -68,7 +68,7 @@ def create_product(request):
         'description': request.data['description'],
         'genre': json.loads(request.data['tags']),
         'image': request.data['file'],
-        'shop_slug' : shop_obj.slug,
+        'shop_slug': shop_obj.slug,
         'shop_rel': shop_obj
     }
     products = Products.objects.create(**data_payload)
@@ -79,14 +79,19 @@ def create_product(request):
 
 @api_view(['POST'])
 def create_tags(request):
-    shop = Shop.objects.get(user=request.user)
-    data_payload = {
-        'name': request.data['categoryName'],
-        'slug': slugify(request.data['categoryName'])
-    }
-    shop.categories = [*shop.categories, data_payload]
-    shop.save()
-    return Response(data=data_payload, status=status.HTTP_201_CREATED)
+    try:
+        shop = Shop.objects.get(user=request.user)
+        cat_name = request.data['categoryName'].lower()
+        matches = [x for x in shop.categories if x['slug'] is cat_name]
+        data_payload = {
+            'name': cat_name,
+            'slug': slugify(cat_name+'-'+get_random_string(length=4)) if len(matches) > 0 else slugify(cat_name)
+        }
+        shop.categories = [*shop.categories, data_payload]
+        shop.save()
+        return Response(data=data_payload, status=status.HTTP_201_CREATED)
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])

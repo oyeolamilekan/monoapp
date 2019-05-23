@@ -64,12 +64,10 @@ def get_shop_products(request, slug, cat):
 @api_view(['GET'])
 def search_query(request,slug):
     try:
-        print(slug)
         queryset = Products.objects.filter(shop_rel__slug=slug)
         query = request.GET.get('q')
         if query:
             params = {"hitsPerPage": 15}
-
             queryset = raw_search(Products, query, params)
             queryset = [x for x in queryset['hits'] if x['shop_slug'] == slug]
         return Response(data={'results': queryset})

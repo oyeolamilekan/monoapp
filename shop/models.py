@@ -24,8 +24,9 @@ class Shop(BaseModel):
     slug = models.SlugField(max_length=40)
     logo = models.ImageField(blank=True)
     address = models.TextField(blank=True)
+    phone_number = models.CharField(max_length=300, default="")
     description = models.TextField(blank=True)
-    categories = JSONField(default=dict)
+    categories = JSONField(default=list)
     objects = models.Manager()
 
     class Meta:
