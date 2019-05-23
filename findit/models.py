@@ -1,15 +1,17 @@
-from accounts.models import User
 from django.conf import settings
 from django.db import models
+
+from accounts.models import User
 from basemodel.base_model import BaseModel
 from shop.models import Shop
+from django.contrib.postgres.fields import JSONField
+
 # Create your models here.
 
 
 class ProductList(models.Manager):
     def get_queryset(self):
         return super().get_queryset().order_by('-created')
-
 
 
 class Products(BaseModel):
@@ -31,18 +33,18 @@ class Products(BaseModel):
     old_price_digit = models.IntegerField(default=0)
     old_price_digit_2 = models.IntegerField(default=0)
     slug = models.SlugField(unique=True, blank=True, null=True)
-    sub_genre = models.CharField(
+    shop_slug = models.CharField(
         max_length=200, blank=True, null=True, default='')
-    genre = models.CharField(max_length=200, blank=True, null=True, default='')
+    genre = JSONField(default=dict)
     lppo = models.CharField(max_length=200, blank=True, null=True)
 
     # Returns the name of the product
     def __str__(self):
-        return self.name
+        return f'{self.name} {self.shop_slug}'
 
     # Return a simple descriptions of the object
     def get_product_description(self):
-        return self.name + ' belongs to ' + self.genre + ' category.'
+        return self.name + ' belongs to category.'
 
     # Again Does something's i don't undetstand
     # Orders by an id

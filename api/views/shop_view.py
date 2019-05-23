@@ -1,11 +1,15 @@
+import json
+
+from django.utils.text import slugify
+from rest_framework import pagination, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import pagination, status, viewsets, generics
-from findit.models import Products
-from api.serializers.commerce import ProductSerializer, CatergoriesSerializer
+
+from api.serializers.commerce import ProductSerializer
 from api.serializers.store import ShopSerializer
+from findit.models import Products
 from shop.models import Shop
-from tags.models import Catergories
+
 
 @api_view(['POST'])
 def create_shop(request):
@@ -26,7 +30,6 @@ def create_shop(request):
             'is_exist': True,
             'msg': 'This shop already exist'
         })
-    print(request.data)
     shop = Shop.objects.create(
         title=request.data['shopName'].lower(),
         category=request.data['shopCategory'],
@@ -63,8 +66,9 @@ def create_product(request):
         'name': request.data['productName'],
         'price': request.data['productPrice'],
         'description': request.data['description'],
-        'genre': request.data['tags'],
+        'genre': json.loads(request.data['tags']),
         'image': request.data['file'],
+        'shop_slug' : shop_obj.slug,
         'shop_rel': shop_obj
     }
     products = Products.objects.create(**data_payload)
@@ -76,47 +80,21 @@ def create_product(request):
 @api_view(['POST'])
 def create_tags(request):
     shop = Shop.objects.get(user=request.user)
-    shop.categories = request.data
+    data_payload = {
+        'name': request.data['categoryName'],
+        'slug': slugify(request.data['categoryName'])
+    }
+    shop.categories = [*shop.categories, data_payload]
     shop.save()
-    return Response(status=status.HTTP_201_CREATED)
-
-
-class StandardResultsSetPagination(pagination.PageNumberPagination):
-    page_size = 10
-    page_size_query_param = 'page_size'
-    max_page_size = 1000
-
-
-class CatergoriesView(viewsets.ModelViewSet):
-    queryset = Catergories.objects.order_by('?')
-    serializer_class = CatergoriesSerializer
-    pagination_class = StandardResultsSetPagination
+    return Response(data=data_payload, status=status.HTTP_201_CREATED)
 
 
 @api_view(['GET'])
 def get_catergories(request):
-    catergory = Catergories.objects.order_by('?')
     choosen_catergory = Shop.objects.get(user=request.user)
-    choosen_list = choosen_catergory.categories
-    catergory_serializer = CatergoriesSerializer(catergory, many=True)
-    return Response(data={'choosen_catergory': choosen_list, 'catergory_serializer': catergory_serializer.data}, status=status.HTTP_200_OK)
-
-
-class EditShopInfo(generics.GenericAPIView):
-    '''[summary]
-
-    Arguments:
-        generics {[ Rest Api Object ]} -- [description]
-    '''
-
-    queryset = Shop.objects.all()
-    serializer_class = ShopSerializer
-
-    def get(self, request, *args, **kwargs):
-
-        queryset = self.get_queryset().filter(title=kwargs.get('slug'))
-        serializer = ShopSerializer(queryset, many=True)
-        return Response(serializer.data)
+    shop_categories = choosen_catergory.categories
+    resp_payload = {'shop_categories': shop_categories}
+    return Response(data=resp_payload, status=status.HTTP_200_OK)
 
 
 @api_view(['GET'])
@@ -147,14 +125,13 @@ def edit_products(request):
         products.name = request.data['productName']
         products.price = request.data['productPrice']
         products.description = request.data['description']
-        products.genre = request.data['tags']
+        products.genre = json.loads(request.data['tags'])
         if request.data['file']:
             products.image = request.data['file']
         products.save()
         products_serailzer = ProductSerializer(products)
         return Response(status=status.HTTP_201_CREATED, data={'product': products_serailzer.data})
-    except Exception as e:
-        print(e)
+    except products.DoesNotExist:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -164,5 +141,5 @@ def delete_products(request):
     if request.user == product_obj.shop_rel.user:
         product_obj.delete()
         return Response(status=status.HTTP_200_OK)
-    
+
     return Response(status=status.HTTP_401_UNAUTHORIZED)

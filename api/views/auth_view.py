@@ -71,7 +71,7 @@ class LoginAPI(generics.GenericAPIView):
         token, _ = Token.objects.get_or_create(user=user)
         try:
             shop_obj = Shop.objects.get(user=user)
-        except Exception as e:
+        except shop_obj.DoesNotExist:
             shop_obj = ''
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
@@ -95,7 +95,6 @@ class ChangePasswordView(generics.UpdateAPIView):
 
     def get_object(self, queryset=None):
         obj = self.request.user
-        print(self.request.data)
         return obj
 
     def update(self, request, *args, **kwargs):
