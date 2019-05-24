@@ -82,7 +82,7 @@ def create_tags(request):
     try:
         shop = Shop.objects.get(user=request.user)
         cat_name = request.data['categoryName'].lower()
-        matches = [x for x in shop.categories if x['slug'] is cat_name]
+        matches = [x for x in shop.categories if x['slug'] is slugify(cat_name)]
         data_payload = {
             'name': cat_name,
             'slug': slugify(cat_name+'-'+get_random_string(length=4)) if len(matches) > 0 else slugify(cat_name)
