@@ -71,6 +71,8 @@ def search_query(request, slug):
             params = {"hitsPerPage": 15}
             queryset = raw_search(Products, query, params)
             queryset = [x for x in queryset['hits'] if x['shop_slug'] == slug]
-        return Response(data={'results': queryset})
+        else:
+            queryset = ProductSerializer(queryset, many=True)
+        return Response(data={'results': queryset if query else queryset.data}, status=status.HTTP_200_OK)
     except queryset.DoesNotExist:
-        return Response(data={'nothing': 'nothing'})
+        return Response(data={'nothing': 'nothing'}, status=status.HTTP_404_NOT_FOUND)
