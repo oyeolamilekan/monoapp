@@ -50,19 +50,20 @@ def get_shop_products(request, slug, cat):
     '''
     shop = Shop.objects.get(slug=slug)
     products = Products.objects.filter(shop_rel=shop)
-    shop_slugs = list(map(lambda x : x['slug'], shop.categories))
+    shop_slugs = list(map(lambda x: x['slug'], shop.categories))
     if not shop.categories:
         products = []
     elif cat in shop_slugs:
         products = products.filter(genre__slug=cat)
     paginator = pagination.PageNumberPagination()
-    paginator.page_size = 10
+    paginator.page_size = 6
     result_page = paginator.paginate_queryset(products, request=request)
     serializer = ProductSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
 
+
 @api_view(['GET'])
-def search_query(request,slug):
+def search_query(request, slug):
     try:
         queryset = Products.objects.filter(shop_rel__slug=slug)
         query = request.GET.get('q')
@@ -72,4 +73,4 @@ def search_query(request,slug):
             queryset = [x for x in queryset['hits'] if x['shop_slug'] == slug]
         return Response(data={'results': queryset})
     except queryset.DoesNotExist:
-        return Response(data={'nothing':'nothing'})
+        return Response(data={'nothing': 'nothing'})

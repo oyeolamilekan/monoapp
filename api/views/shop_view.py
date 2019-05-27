@@ -33,6 +33,7 @@ def create_shop(request):
     shop = Shop.objects.create(
         title=request.data['shopName'].lower(),
         category=request.data['shopCategory'],
+        phone_number=request.data['phoneNumber'],
         user=request.user)
     shop.save()
     return Response({
@@ -85,7 +86,8 @@ def create_tags(request):
         matches = [x for x in shop.categories if x['slug'] == slugify(cat_name)]
         data_payload = {
             'name': cat_name,
-            'slug': slugify(cat_name+'-'+get_random_string(length=4)) if len(matches) > 0 else slugify(cat_name)
+            'slug': slugify(cat_name+'-'+get_random_string(length=4)) if len(matches) > 0 else slugify(cat_name),
+            'public_slug': slugify(cat_name)
         }
         shop.categories = [*shop.categories, data_payload]
         shop.save()
@@ -114,6 +116,7 @@ def save_info(request):
     user_info_obj = Shop.objects.get(user=request.user)
     user_info_obj.address = request.data['address']
     user_info_obj.description = request.data['description']
+    user_info_obj.phone_number = request.data['phoneNumber']
     if request.data['logo']:
         user_info_obj.logo = request.data['logo']
     user_info_obj.save()
