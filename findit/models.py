@@ -36,7 +36,6 @@ class Products(BaseModel):
     shop_slug = models.CharField(
         max_length=200, blank=True, null=True, default='')
     genre = JSONField(default=dict)
-    lppo = models.CharField(max_length=200, blank=True, null=True)
 
     # Returns the name of the product
     def __str__(self):

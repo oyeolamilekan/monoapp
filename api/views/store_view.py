@@ -31,7 +31,7 @@ def get_shop_info(request, slug):
         }
         return Response(data={'shop_info': data_obj}, status=status.HTTP_200_OK)
 
-    except shop_info.DoesNotExist:
+    except Shop.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
@@ -48,19 +48,39 @@ def get_shop_products(request, slug, cat):
     Returns:
         [JSON] -- [Gives the user back a json response of the shop products needed]
     '''
-    shop = Shop.objects.get(slug=slug)
-    products = Products.objects.filter(shop_rel=shop)
-    shop_slugs = list(map(lambda x: x['slug'], shop.categories))
-    if not shop.categories:
-        products = []
-    elif cat in shop_slugs:
-        products = products.filter(genre__slug=cat)
-    paginator = pagination.PageNumberPagination()
-    paginator.page_size = 6
-    result_page = paginator.paginate_queryset(products, request=request)
-    serializer = ProductSerializer(result_page, many=True)
-    return paginator.get_paginated_response(serializer.data)
+    try:
+        shop = Shop.objects.get(slug=slug)
+        products = Products.objects.filter(shop_rel=shop)
+        shop_slugs = list(map(lambda x: x['slug'], shop.categories))
+        if not shop.categories:
+            products = []
+        elif cat in shop_slugs:
+            products = products.filter(genre__slug=cat)
+        paginator = pagination.PageNumberPagination()
+        paginator.page_size = 6
+        result_page = paginator.paginate_queryset(products, request=request)
+        serializer = ProductSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+    except Shop.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['GET'])
+def get_shop_trending_products(request, slug, cat):
+    try:
+        shop = Shop.objects.get(slug=slug)
+        products = Products.objects.filter(shop_rel=shop).order_by("-num_of_clicks")
+        shop_slugs = list(map(lambda x: x['slug'], shop.categories))
+        if not shop.categories:
+            products = []
+        elif cat in shop_slugs:
+            products = products.filter(genre__slug=cat)
+        paginator = pagination.PageNumberPagination()
+        paginator.page_size = 6
+        result_page = paginator.paginate_queryset(products, request=request)
+        serializer = ProductSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
+    except Shop.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 def search_query(request, slug):
