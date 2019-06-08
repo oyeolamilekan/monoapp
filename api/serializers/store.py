@@ -1,18 +1,19 @@
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer, Serializer, CharField
+
 from shop.models import Shop
 
 
-class ShopCreateSerializer(serializers.Serializer):
-    shop = serializers.CharField()
+class ShopCreateSerializer(Serializer):
+    shop = CharField()
 
     def validate_shop(self, data):
         return True
 
-class ShopSerializer(serializers.ModelSerializer):
-    """[Serializers the shop info]
+class ShopSerializer(ModelSerializer):
+    """[the shop info]
 
     Arguments:
-        serializers {[ inherits from serializer class rest framework]} -- [description]
+        {[ inherits from serializer class rest framework]} -- [description]
     """
     class Meta:
         model = Shop

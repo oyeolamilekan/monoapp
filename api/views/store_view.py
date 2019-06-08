@@ -1,5 +1,4 @@
 from algoliasearch_django import raw_search
-from django.core import serializers
 from rest_framework import pagination, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response

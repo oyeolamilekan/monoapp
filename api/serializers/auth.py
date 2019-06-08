@@ -1,21 +1,23 @@
-from rest_framework import serializers
 from django.contrib.auth import authenticate
+from rest_framework.serializers import (CharField, ModelSerializer, Serializer,
+                                        ValidationError)
+
 from accounts.models import User
 
 
-class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField()
+class LoginSerializer(Serializer):
+    username = CharField()
+    password = CharField()
 
     def validate(self, data):
         user = authenticate(**data)
         if user and user.is_active:
             return user
-        raise serializers.ValidationError('Incorrect Crendentials')
+        raise ValidationError('Incorrect Crendentials')
 
 
 # Register Serializers
-class RegisterSerializer(serializers.ModelSerializer):
+class RegisterSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'name', 'email', 'is_commerce', 'password')
@@ -33,18 +35,17 @@ class RegisterSerializer(serializers.ModelSerializer):
 # Change password functionality
 
 
-class ChangePasswordSerializer(serializers.Serializer):
+class ChangePasswordSerializer(Serializer):
 
     """
     Serializer for password change endpoint.
     """
-    old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True)
+    old_password = CharField(required=True)
+    new_password = CharField(required=True)
 
 # User Serializers
 
-
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(ModelSerializer):
     class Meta:
         model = User
         fields = ('id', 'email')
