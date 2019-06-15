@@ -7,6 +7,7 @@ from accounts.models import User
 from findit.models import Products
 from shop.models import Shop
 from lessons.models import Lesson
+from comment.models import Comment
 
 
 class UserFactory(DjangoModelFactory):
@@ -52,6 +53,16 @@ class LessonFactory(DjangoModelFactory):
     title = Faker('name')
     category = 'setting_up'
     video_url = 'http://video.com/nfWdnnd2'
+    id = str(uuid.uuid1())
 
     class Meta:
         model = Lesson
+
+class CommentsFactory(DjangoModelFactory):
+    user = SubFactory(UserFactory)
+    text = Faker('name')
+    content_object = SubFactory(LessonFactory)
+    id = str(uuid.uuid1())
+
+    class Meta:
+        model = Comment

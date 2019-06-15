@@ -2,13 +2,14 @@ from django.test import TestCase
 from django.urls import reverse
 
 from lessons.models import Lesson
-from ..factories import LessonFactory, UserFactory
+
+from ..factories import CommentsFactory, LessonFactory, UserFactory
 from ..utils import get_token
 
 
 class WhenUserGetLessons(TestCase):
     """
-        [ Test if user can get products]
+        [Test if user can get products]
 
     Arguments:
         TestCase {[type]} -- [description]
@@ -17,10 +18,14 @@ class WhenUserGetLessons(TestCase):
     def setUp(self):
         self.user = UserFactory()
         self.lesson = LessonFactory()
+        self.comments = CommentsFactory(content_object=self.lesson, user=self.user)
         token = get_token(user=self.user)
         self.auth = "Token {}".format(token)
         self.response = self.client.get(
-            reverse("api:lesson", kwargs={"slug": "setting_up"}),
+            reverse(
+                "api:get_comment",
+                kwargs={"slug": self.lesson.id, "content_type": "lessons"},
+            ),
             HTTP_AUTHORIZATION=self.auth,
             content_type="application/json",
         )
@@ -35,4 +40,5 @@ class WhenUserGetLessons(TestCase):
         """
             [Check if the products are created]
         """
-        assert Lesson.objects.all().count() == 1
+        lesson = Lesson.objects.get(id=self.lesson.id)
+        assert lesson.comments.all().count() == 1
