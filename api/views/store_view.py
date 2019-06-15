@@ -30,7 +30,7 @@ def get_shop_info(request, slug):
         }
         return Response(data={'shop_info': data_obj}, status=status.HTTP_200_OK)
 
-    except Shop.DoesNotExist:
+    except shop_info.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
@@ -60,7 +60,7 @@ def get_shop_products(request, slug, cat):
         result_page = paginator.paginate_queryset(products, request=request)
         serializer = ProductSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
-    except Shop.DoesNotExist:
+    except shop.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
@@ -78,7 +78,7 @@ def get_shop_trending_products(request, slug, cat):
         result_page = paginator.paginate_queryset(products, request=request)
         serializer = ProductSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
-    except Shop.DoesNotExist:
+    except shop.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])

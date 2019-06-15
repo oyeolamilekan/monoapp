@@ -1,10 +1,11 @@
 import json
 
+from django.utils.crypto import get_random_string
 from django.utils.text import slugify
 from rest_framework import pagination, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.utils.crypto import get_random_string
+
 from api.serializers.commerce import ProductSerializer
 from api.serializers.store import ShopSerializer
 from findit.models import Products
@@ -83,7 +84,8 @@ def create_tags(request):
     try:
         shop = Shop.objects.get(user=request.user)
         cat_name = request.data['categoryName'].lower()
-        matches = [x for x in shop.categories if x['slug'] == slugify(cat_name)]
+        matches = [x for x in shop.categories if x['slug']
+                   == slugify(cat_name)]
         data_payload = {
             'name': cat_name,
             'slug': slugify(cat_name+'-'+get_random_string(length=4)) if len(matches) > 0 else slugify(cat_name),
@@ -92,7 +94,9 @@ def create_tags(request):
         shop.categories = [*shop.categories, data_payload]
         shop.save()
         return Response(data=data_payload, status=status.HTTP_201_CREATED)
-    except:
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -111,7 +115,7 @@ def get_info(request):
     return Response(serializer.data)
 
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def save_info(request):
     user_info_obj = Shop.objects.get(user=request.user)
     user_info_obj.address = request.data['address']
@@ -126,7 +130,7 @@ def save_info(request):
     return Response(status=status.HTTP_200_OK, data=data_payload)
 
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def edit_products(request):
     try:
         products = Products.objects.get(id=request.data['id'])

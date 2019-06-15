@@ -17,22 +17,12 @@ class ProductList(models.Manager):
 class Products(BaseModel):
     name = models.CharField(max_length=300)
     price = models.CharField(max_length=300)
-    converted_price = models.CharField(max_length=300, blank=True, null=True)
-    real_price = models.IntegerField(default=0)
     objects = ProductList()
-    real_price_2 = models.IntegerField(default=0)
     image = models.ImageField()
     source_url = models.CharField(max_length=700, blank=True)
     shop_rel = models.ForeignKey(Shop, null=True, on_delete=True)
-    shop = models.CharField(max_length=300)
     num_of_clicks = models.IntegerField(default=0)
     description = models.TextField(blank=True, null=True)
-    createdate = models.DateTimeField(auto_now_add=True)
-    old_price = models.CharField(max_length=200, blank=True, null=True)
-    old_price_2 = models.CharField(max_length=200, blank=True, null=True)
-    old_price_digit = models.IntegerField(default=0)
-    old_price_digit_2 = models.IntegerField(default=0)
-    slug = models.SlugField(unique=True, blank=True, null=True)
     shop_slug = models.CharField(
         max_length=200, blank=True, null=True, default='')
     genre = JSONField(default=dict)
@@ -50,16 +40,3 @@ class Products(BaseModel):
     class Meta:
         verbose_name = 'Products'
         verbose_name_plural = 'Products'
-
-
-class UserPicks(BaseModel):
-    user = models.ForeignKey(User, on_delete=True)
-    picks = models.CharField(max_length=200)
-
-    def __str__(self):
-        return f'{self.user} - {self.picks}'
-
-    class Meta:
-        ordering = ['-created']
-        verbose_name = 'UserPicks'
-        verbose_name_plural = 'UserPicks'

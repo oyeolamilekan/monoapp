@@ -7,11 +7,11 @@ from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
-
+from rest_framework import serializers
+from tests.utils import get_token
 from accounts.models import User
 from api.serializers.auth import ChangePasswordSerializer, RegisterSerializer, LoginSerializer, UserSerializer
 from shop.models import Shop
-
 # Resgister api
 
 
@@ -37,16 +37,18 @@ class RegisterAPI(generics.GenericAPIView):
             [JSON] -- [returns json reponse with the needed crendentials]
         '''
 
+        if len(request.data['password']) <= 5:
+            raise serializers.ValidationError({'error_type': "Password too small"})
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
-        token, _ = Token.objects.get_or_create(user=user)
+        token = get_token(user=user)
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
             "name": user.name,
             "is_admin": user.is_superuser,
             "is_commerce": user.is_commerce,
-            "token": token.key
+            "token": token
         })
 
 # Login api
@@ -68,7 +70,7 @@ class LoginAPI(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
-        token, _ = Token.objects.get_or_create(user=user)
+        token = get_token(user=user)
         try:
             shop_obj = Shop.objects.get(user=user)
         except shop_obj.DoesNotExist:
@@ -78,7 +80,7 @@ class LoginAPI(generics.GenericAPIView):
             "name": user.name,
             "is_admin": user.is_superuser,
             "is_commerce": user.is_commerce,
-            "token": token.key,
+            "token": token,
             "shop_name": shop_obj.title if shop_obj else '',
             "shop_slug": shop_obj.slug,
             "shop_logo": shop_obj.logo.url if shop_obj.logo else '',

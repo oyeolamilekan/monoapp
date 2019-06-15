@@ -119,7 +119,7 @@ CLOUDINARY_STORAGE = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'quickfinda',
+        'NAME': 'siten',
         'USER': 'oyeolalekan',
         'PASSWORD': 'oyeolamilekan',
         'HOST': '127.0.0.1',

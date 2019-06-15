@@ -9,7 +9,7 @@ class ProductSerializer(ModelSerializer):
     class Meta:
         model = Products
         fields = ('id', 'name', 'image', 'source_url',
-                  'genre', 'shop', 'price', 'slug', 'description')
+                  'genre', 'shop_rel', 'price', 'description')
 
 
 # Catergory serializer
