@@ -6,7 +6,7 @@ from accounts.models import User
 
 
 class LoginSerializer(Serializer):
-    username = CharField()
+    email = CharField()
     password = CharField()
 
     def validate(self, data):

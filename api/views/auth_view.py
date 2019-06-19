@@ -81,12 +81,13 @@ class LoginAPI(generics.GenericAPIView):
         Returns:
             [type] -- [description]
         """
-
+        print(request.data)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data
         token = get_token(user=user)
         try:
+            print('hi')
             shop_obj = Shop.objects.get(user=user)
         except shop_obj.DoesNotExist:
             shop_obj = ""
