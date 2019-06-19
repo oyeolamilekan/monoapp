@@ -183,8 +183,9 @@ def verify_token(request, token):
 @api_view(["POST"])
 def change_password(request):
     user_auth = ResetToken.objects.get(token=request.data['token'])
-    user_auth.user.set_password(request.data["password"])
+    user_obj = User.objects.get(id=user_auth.id)
+    user_obj.set_password(request.data["password"])
+    user_obj.save()
     user_auth.used = True
-    user_auth.user.save()
     user_auth.save()
     return Response(status=status.HTTP_200_OK)
