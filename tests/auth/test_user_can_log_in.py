@@ -15,7 +15,7 @@ class UserCanLogin(TestCase):
     def setUp(self):
         self.user = UserFactory(password="oyeolamilekan")
         self.shop = ShopFactory(user=self.user)
-        self.payload = {"username": self.user.email, "password": "oyeolamilekan"}
+        self.payload = {"email": self.user.email, "password": "oyeolamilekan"}
         self.response = self.client.post(reverse("api:login"), data=self.payload)
 
     def test_response(self):
