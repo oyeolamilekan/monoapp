@@ -185,5 +185,6 @@ def change_password(request):
     user_auth = ResetToken.objects.get(token=request.data['token'])
     user_auth.user.set_password(request.data["password"])
     user_auth.used = True
+    user_auth.user.save()
     user_auth.save()
     return Response(status=status.HTTP_200_OK)
