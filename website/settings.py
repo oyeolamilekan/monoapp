@@ -108,28 +108,28 @@ CLOUDINARY_STORAGE = {
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-if DEBUG:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": "siten",
-            "USER": "oyeolalekan",
-            "PASSWORD": "oyeolamilekan",
-            "HOST": "127.0.0.1",
-            "PORT": "5432",
-        }
+# if DEBUG:
+#     DATABASES = {
+#         "default": {
+#             "ENGINE": "django.db.backends.postgresql",
+#             "NAME": "siten",
+#             "USER": "oyeolalekan",
+#             "PASSWORD": "oyeolamilekan",
+#             "HOST": "127.0.0.1",
+#             "PORT": "5432",
+#         }
+#     }
+# else:
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "siten",
+        "USER": "oyeolalekan",
+        "PASSWORD": "oyeolamilekan",
+        "HOST": "127.0.0.1",
+        "PORT": "",
     }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": "siten",
-            "USER": "oyeolalekan",
-            "PASSWORD": "oyeolamilekan",
-            "HOST": "127.0.0.1",
-            "PORT": "",
-        }
-    }
+}
 # Frontend Url
 FRONTEND_URL = "http://myapp.local:3000"
 
