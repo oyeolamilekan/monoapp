@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import platform
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -24,7 +25,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = "1+*g+d&e2t#5=9=&i64ou+55erb=y1nzxj)idht=56*)u@leud"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
@@ -46,10 +47,7 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "accounts",
-    "comment",
-    "feedbacks",
-    "lessons",
+    # Third party apps
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
@@ -57,8 +55,14 @@ INSTALLED_APPS = [
     "allauth.account",
     "cloudinary_storage",
     "cloudinary",
-    "api",
     "algoliasearch_django",
+    # Internal apps
+    "accounts",
+    "api",
+    "analytics",
+    "comment",
+    "feedbacks",
+    "lessons",
     "findit",
     "shop",
     "tags",
@@ -108,28 +112,29 @@ CLOUDINARY_STORAGE = {
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-# if DEBUG:
-#     DATABASES = {
-#         "default": {
-#             "ENGINE": "django.db.backends.postgresql",
-#             "NAME": "siten",
-#             "USER": "oyeolalekan",
-#             "PASSWORD": "oyeolamilekan",
-#             "HOST": "127.0.0.1",
-#             "PORT": "5432",
-#         }
-#     }
-# else:
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "siten",
-        "USER": "oyeolalekan",
-        "PASSWORD": "oyeolamilekan",
-        "HOST": "127.0.0.1",
-        "PORT": "",
+if platform.system() == 'Linux':
+    DEBUG = False
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "siten",
+            "USER": "oyeolalekan",
+            "PASSWORD": "oyeolamilekan",
+            "HOST": "127.0.0.1",
+            "PORT": "5432",
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "siten",
+            "USER": "oyeolalekan",
+            "PASSWORD": "oyeolamilekan",
+            "HOST": "127.0.0.1",
+            "PORT": "",
+        }
+    }
 # Frontend Url
 FRONTEND_URL = "http://myapp.local:3000"
 
