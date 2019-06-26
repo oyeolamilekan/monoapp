@@ -8,13 +8,15 @@ from .urls_route.store import STORE_URL
 from .urls_route.feedback import CREATE_FEEDBACK
 from .urls_route.lesson import LESSON_URL
 from .urls_route.comments import COMMENT_URL
+from .urls_route.analytics import ANALYTICS_URL
 app_name = 'api'
 
 urlpatterns = [
     *AUTH_URL,
+    *ANALYTICS_URL,
     *COMMERCE_URL,
-    *STORE_URL,
     *CREATE_FEEDBACK,
+    *COMMENT_URL,
     *LESSON_URL,
-    *COMMENT_URL
+    *STORE_URL,
 ]

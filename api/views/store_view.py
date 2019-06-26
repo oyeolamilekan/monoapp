@@ -1,16 +1,20 @@
+import datetime
+
 from algoliasearch_django import raw_search
+from django.contrib.contenttypes.models import ContentType
 from rest_framework import pagination, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from analytics.models import Analytics
 from api.serializers.commerce import ProductSerializer
 from findit.models import Products
 from shop.models import Shop
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_shop_info(request, slug):
-    '''
+    """
         Gets the necessary info needed to show the user.
 
     Arguments:
@@ -19,24 +23,24 @@ def get_shop_info(request, slug):
 
     Returns:
         [JSON] -- [Gives the user back a json response of the shop info needed]
-    '''
+    """
     try:
         shop_info = Shop.objects.get(slug=slug)
         data_obj = {
-            'shop_name': shop_info.title,
-            'logo': shop_info.logo.url if shop_info.logo else '',
-            'tags': shop_info.categories if shop_info.categories else [],
-            'slug': shop_info.slug
+            "shop_name": shop_info.title,
+            "logo": shop_info.logo.url if shop_info.logo else "",
+            "tags": shop_info.categories if shop_info.categories else [],
+            "slug": shop_info.slug,
         }
-        return Response(data={'shop_info': data_obj}, status=status.HTTP_200_OK)
+        return Response(data={"shop_info": data_obj}, status=status.HTTP_200_OK)
 
     except shop_info.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_shop_products(request, slug, cat):
-    '''
+    """
         Gets the necessary products needed to show the customer for the shop.
 
     Arguments:
@@ -46,11 +50,11 @@ def get_shop_products(request, slug, cat):
 
     Returns:
         [JSON] -- [Gives the user back a json response of the shop products needed]
-    '''
+    """
     try:
         shop = Shop.objects.get(slug=slug)
         products = Products.objects.filter(shop_rel=shop)
-        shop_slugs = list(map(lambda x: x['slug'], shop.categories))
+        shop_slugs = list(map(lambda x: x["slug"], shop.categories))
         if not shop.categories:
             products = []
         elif cat in shop_slugs:
@@ -63,12 +67,13 @@ def get_shop_products(request, slug, cat):
     except shop.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['GET'])
+
+@api_view(["GET"])
 def get_shop_trending_products(request, slug, cat):
     try:
         shop = Shop.objects.get(slug=slug)
         products = Products.objects.filter(shop_rel=shop).order_by("-num_of_clicks")
-        shop_slugs = list(map(lambda x: x['slug'], shop.categories))
+        shop_slugs = list(map(lambda x: x["slug"], shop.categories))
         if not shop.categories:
             products = []
         elif cat in shop_slugs:
@@ -81,17 +86,20 @@ def get_shop_trending_products(request, slug, cat):
     except shop.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
-@api_view(['GET'])
+@api_view(["GET"])
 def search_query(request, slug):
     try:
         queryset = Products.objects.filter(shop_rel__slug=slug)
-        query = request.GET.get('q')
+        query = request.GET.get("q")
         if query:
             params = {"hitsPerPage": 15}
             queryset = raw_search(Products, query, params)
-            queryset = [x for x in queryset['hits'] if x['shop_slug'] == slug]
+            queryset = [x for x in queryset["hits"] if x["shop_slug"] == slug]
         else:
             queryset = ProductSerializer(queryset, many=True)
-        return Response(data={'results': queryset if query else queryset.data}, status=status.HTTP_200_OK)
+        return Response(
+            data={"results": queryset if query else queryset.data},
+            status=status.HTTP_200_OK,
+        )
     except queryset.DoesNotExist:
-        return Response(data={'nothing': 'nothing'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(data={"nothing": "nothing"}, status=status.HTTP_404_NOT_FOUND)

@@ -1,11 +1,11 @@
 from django.conf import settings
+from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.postgres.fields import JSONField
 from django.db import models
 
-from accounts.models import User
 from basemodel.base_model import BaseModel
 from shop.models import Shop
-from django.contrib.postgres.fields import JSONField
-
+from analytics.models import Analytics
 # Create your models here.
 
 
@@ -26,6 +26,7 @@ class Products(BaseModel):
     shop_slug = models.CharField(
         max_length=200, blank=True, null=True, default='')
     genre = JSONField(default=dict)
+    analytics = GenericRelation(Analytics)
 
     # Returns the name of the product
     def __str__(self):
