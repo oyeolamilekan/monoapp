@@ -31,6 +31,7 @@ def get_shop_info(request, slug):
             "logo": shop_info.logo.url if shop_info.logo else "",
             "tags": shop_info.categories if shop_info.categories else [],
             "slug": shop_info.slug,
+            "id": shop_info.id
         }
         return Response(data={"shop_info": data_obj}, status=status.HTTP_200_OK)
 

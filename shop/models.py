@@ -1,9 +1,11 @@
+from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.db import models
 from django.db.models.signals import pre_save
 from django.utils.text import slugify
 
 from accounts.models import User
+from analytics.models import Analytics
 from findit.models import BaseModel
 
 # Create your models here.
@@ -28,6 +30,7 @@ class Shop(BaseModel):
     description = models.TextField(blank=True)
     categories = JSONField(default=list)
     objects = models.Manager()
+    analytics = GenericRelation(Analytics)
 
     class Meta:
         ordering = ['-created']

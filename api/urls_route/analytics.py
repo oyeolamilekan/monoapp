@@ -6,7 +6,21 @@ ANALYTICS_URL = [
     path(
         "create_analytics_product/<slug:pk>/",
         analytics.create_product_analytics,
-        name="create_analytics",
+        name="create_product_analytics",
     ),
-    path("get_data/<slug:pk>/", analytics.get_product_clicks, name="get_data"),
+    path(
+        "create_shop_analytics/<slug:pk>/",
+        analytics.create_shop_analytics,
+        name="create_shop_analytics",
+    ),
+    path(
+        "get_data/<slug:pk>/",
+        analytics.get_product_clicks, 
+        name="get_data"
+    ),
+    path(
+        "get_shop_view/<slug:pk>/", 
+        analytics.get_shop_views, 
+        name="get_shop_view"
+    ),
 ]
