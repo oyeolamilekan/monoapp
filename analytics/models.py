@@ -16,7 +16,7 @@ class Analytics(BaseModel):
     Arguments:
         models {[type]} -- [description]
     """
-    content_type = models.ForeignKey(ContentType, on_delete=True, blank=True)
+    content_type = models.ForeignKey(ContentType, on_delete=True, blank=True, null=True)
     object_id = models.CharField(max_length=50, blank=True)
     content_object = GenericForeignKey('content_type', 'object_id')
     url = models.CharField(max_length=200, blank=True)
