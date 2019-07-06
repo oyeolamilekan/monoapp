@@ -23,4 +23,9 @@ ANALYTICS_URL = [
         analytics.get_shop_views, 
         name="get_shop_view"
     ),
+    path(
+        "create_tags_analytics/",
+        analytics.create_tags_analytics,
+        name='create_tags_analytics'
+    )
 ]

@@ -16,13 +16,12 @@ class Analytics(BaseModel):
     Arguments:
         models {[type]} -- [description]
     """
-    content_type = models.ForeignKey(ContentType, on_delete=True)
-    object_id = models.CharField(max_length=50)
+    content_type = models.ForeignKey(ContentType, on_delete=True, blank=True)
+    object_id = models.CharField(max_length=50, blank=True)
     content_object = GenericForeignKey('content_type', 'object_id')
-    view_count = models.IntegerField(default=1)
-    click_count = models.IntegerField(default=1)
+    url = models.CharField(max_length=200, blank=True)
     objects = models.Manager()
     info = JSONField(default=list)
 
     def __str__(self):
-        return "view count: {} -  clicked count: {}".format(self.view_count, self.click_count)
+        return "View objects"
