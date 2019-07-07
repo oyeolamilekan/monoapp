@@ -14,6 +14,11 @@ ANALYTICS_URL = [
         name="create_shop_analytics",
     ),
     path(
+        "create_tags_analytics/",
+        analytics.create_tags_analytics,
+        name='create_tags_analytics'
+    ),
+    path(
         "get_data/<slug:pk>/",
         analytics.get_product_clicks, 
         name="get_data"
@@ -24,8 +29,8 @@ ANALYTICS_URL = [
         name="get_shop_view"
     ),
     path(
-        "create_tags_analytics/",
-        analytics.create_tags_analytics,
-        name='create_tags_analytics'
+        "get_products_clicked/",
+        analytics.get_product_clicked,
+        name='get_products'
     )
 ]

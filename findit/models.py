@@ -35,6 +35,12 @@ class Products(BaseModel):
     # Return a simple descriptions of the object
     def get_product_description(self):
         return self.name + ' belongs to category.'
+    
+    def get_product_name(self):
+        return self.name
+    
+    def get_product_id(self):
+        return self.id
 
     # Again Does something's i don't undetstand
     # Orders by an id

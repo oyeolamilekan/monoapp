@@ -20,7 +20,7 @@ class Shop(BaseModel):
     Returns:
         [type] -- [description]
     """
-    user = models.ForeignKey(User, on_delete=True, null=True)
+    user = models.OneToOneField(User, on_delete=True, null=True)
     title = models.CharField(max_length=300)
     category = models.CharField(max_length=300, default='')
     slug = models.SlugField(max_length=40)
