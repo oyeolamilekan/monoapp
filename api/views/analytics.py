@@ -10,6 +10,7 @@ from analytics.models import Analytics
 from findit.models import Products
 from shop.models import Shop
 from utilcode.msg.get_user_info import get_location
+from utilcode.msg.ip_adress import get_client_ip
 
 # from shop.models import Shop
 
@@ -24,17 +25,16 @@ def create_product_analytics(request, pk):
         [type] -- [description]
     """
     product = Products.objects.get(id=pk)
-    user_country = get_location(request.META.get("REMOTE_ADDR", None))['country_name']
     user_info = {
         "user_ip": request.META.get("REMOTE_ADDR", None),
         "user_phone": request.META.get("HTTP_USER_AGENT", None),
         "user_path": request.META.get("PATH_INFO", None),
         "request_method": request.META.get("REQUEST_METHOD", None),
         "request_origin": request.META.get("HTTP_ORIGIN", None),
-        "user_country": user_country,
+        "user_info": get_location(get_client_ip(request)),
     }
     anayltics_obj = Analytics.objects.create(
-        content_object=product, info=json.dumps(user_info), user=product.shop_rel.user
+        content_object=product, info=json.dumps([user_info]), user=product.shop_rel.user
     )
     anayltics_obj.save()
     return Response(status=status.HTTP_200_OK)
@@ -52,17 +52,16 @@ def create_shop_analytics(request, pk):
         [type] -- [description]
     """
     shop = Shop.objects.get(pk=pk)
-    user_country = get_location(request.META.get("REMOTE_ADDR", None))['country_name']
     user_info = {
         "user_ip": request.META.get("REMOTE_ADDR", None),
         "user_phone": request.META.get("HTTP_USER_AGENT", None),
         "user_path": request.META.get("PATH_INFO", None),
         "request_method": request.META.get("REQUEST_METHOD", None),
         "request_origin": request.META.get("HTTP_ORIGIN", None),
-        "user_country": user_country,
+        "user_info": get_location(get_client_ip(request)),
     }
     anayltics_obj = Analytics.objects.create(
-        content_object=shop, info=json.dumps(user_info), user=shop.user
+        content_object=shop, info=json.dumps([user_info]), user=shop.user
     )
     anayltics_obj.save()
     return Response(status=status.HTTP_200_OK)
@@ -70,17 +69,16 @@ def create_shop_analytics(request, pk):
 
 @api_view(["POST"])
 def create_tags_analytics(request):
-    user_country = get_location(request.META.get("REMOTE_ADDR", None))['country_name']
     user_info = {
         "user_ip": request.META.get("REMOTE_ADDR", None),
         "user_phone": request.META.get("HTTP_USER_AGENT", None),
-        "user_path": request.META.get("PATH_INFO", None),
         "request_method": request.META.get("REQUEST_METHOD", None),
         "request_origin": request.META.get("HTTP_ORIGIN", None),
-        "user_country": user_country,
+        "user_url": request.data["url"],
+        "user_info": get_location(get_client_ip(request)),
     }
     analytics_obj = Analytics.objects.create(
-        url=request.data["url"], info=json.dumps(user_info)
+        url=request.data["url"], info=json.dumps([user_info])
     )
     analytics_obj.save()
     return Response(status=status.HTTP_200_OK)
