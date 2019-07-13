@@ -30,7 +30,7 @@ def create_product_analytics(request, pk):
         "user_path": request.META.get("PATH_INFO", None),
         "request_method": request.META.get("REQUEST_METHOD", None),
         "request_origin": request.META.get("HTTP_ORIGIN", None),
-        "user_info": get_location(request.META.get("REMOTE_ADDR", None)),
+        "user_info":json.dumps(get_location(request.META.get("REMOTE_ADDR", None))),
     }
     anayltics_obj = Analytics.objects.create(
         content_object=product, info=json.dumps([user_info]), user=product.shop_rel.user
