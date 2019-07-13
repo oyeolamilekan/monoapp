@@ -60,7 +60,7 @@ def create_shop_analytics(request, pk):
         "user_info": get_location(request.META.get("REMOTE_ADDR", None)),
     }
     anayltics_obj = Analytics.objects.create(
-        content_object=shop, info=json.dumps([user_info]), user=shop.user
+        content_object=shop, info=json.dumps(user_info), user=shop.user
     )
     anayltics_obj.save()
     return Response(status=status.HTTP_200_OK)
