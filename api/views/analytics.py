@@ -32,7 +32,6 @@ def create_product_analytics(request, pk):
         "request_origin": request.META.get("HTTP_ORIGIN", None),
         "user_info": get_location(request.META.get("REMOTE_ADDR", None)),
     }
-    print(product.shop_rel.user)
     anayltics_obj = Analytics.objects.create(
         content_object=product, info=json.dumps([user_info]), user=product.shop_rel.user
     )
@@ -114,7 +113,6 @@ def get_shop_views(request, pk):
         .annotate(date_added_count=Count("id"))
         .order_by("created")
     )
-    print(analytics_obj)
     data_set = [obj_["date_added_count"] for obj_ in analytics_obj]
     day_set = [
         datetime.datetime.strptime(str(obj_["created"]), "%Y-%m-%d").strftime("%a")

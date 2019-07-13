@@ -27,7 +27,7 @@ SECRET_KEY = "1+*g+d&e2t#5=9=&i64ou+55erb=y1nzxj)idht=56*)u@leud"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["kirr.xyz", "www.kirr.xyz", "127.0.0.1"]
 
 
 # Application definition
@@ -151,12 +151,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # Email settings
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = "johnsonoye34@gmail.com"
-EMAIL_HOST_PASSWORD = "oyeolamilekan"
+EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
+SENDGRID_API_KEY = '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'
+SENDGRID_SANDBOX_MODE_IN_DEBUG=False
+SENDGRID_ECHO_TO_STDOUT=False
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
