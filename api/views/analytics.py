@@ -24,13 +24,14 @@ def create_product_analytics(request, pk):
         [type] -- [description]
     """
     product = Products.objects.get(id=pk)
+    user_country = get_location(request.META.get("REMOTE_ADDR", None))['country_name']
     user_info = {
         "user_ip": request.META.get("REMOTE_ADDR", None),
         "user_phone": request.META.get("HTTP_USER_AGENT", None),
         "user_path": request.META.get("PATH_INFO", None),
         "request_method": request.META.get("REQUEST_METHOD", None),
         "request_origin": request.META.get("HTTP_ORIGIN", None),
-        # "user_country": get_location(request.META.get("REMOTE_ADDR", None))['country_name'],
+        "user_country": user_country,
     }
     anayltics_obj = Analytics.objects.create(
         content_object=product, info=json.dumps(user_info), user=product.shop_rel.user
@@ -51,13 +52,14 @@ def create_shop_analytics(request, pk):
         [type] -- [description]
     """
     shop = Shop.objects.get(pk=pk)
+    user_country = get_location(request.META.get("REMOTE_ADDR", None))['country_name']
     user_info = {
         "user_ip": request.META.get("REMOTE_ADDR", None),
         "user_phone": request.META.get("HTTP_USER_AGENT", None),
         "user_path": request.META.get("PATH_INFO", None),
         "request_method": request.META.get("REQUEST_METHOD", None),
         "request_origin": request.META.get("HTTP_ORIGIN", None),
-        # "user_country": get_location(request.META.get("REMOTE_ADDR", None))['country_name'],
+        "user_country": user_country,
     }
     anayltics_obj = Analytics.objects.create(
         content_object=shop, info=json.dumps(user_info), user=shop.user
@@ -68,13 +70,14 @@ def create_shop_analytics(request, pk):
 
 @api_view(["POST"])
 def create_tags_analytics(request):
+    user_country = get_location(request.META.get("REMOTE_ADDR", None))['country_name']
     user_info = {
         "user_ip": request.META.get("REMOTE_ADDR", None),
         "user_phone": request.META.get("HTTP_USER_AGENT", None),
+        "user_path": request.META.get("PATH_INFO", None),
         "request_method": request.META.get("REQUEST_METHOD", None),
         "request_origin": request.META.get("HTTP_ORIGIN", None),
-        "user_url": request.data["url"],
-        # "user_country": get_location(request.META.get("REMOTE_ADDR", None))['country_name'],
+        "user_country": user_country,
     }
     analytics_obj = Analytics.objects.create(
         url=request.data["url"], info=json.dumps(user_info)
