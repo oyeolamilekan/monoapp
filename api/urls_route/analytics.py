@@ -2,7 +2,7 @@ from django.urls import path
 
 from ..views import analytics
 
-ANALYTICS_URL = [
+ANALYTICS = [
     path(
         "create_analytics_product/<slug:pk>/",
         analytics.create_product_analytics,
