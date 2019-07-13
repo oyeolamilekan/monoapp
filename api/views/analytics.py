@@ -33,7 +33,7 @@ def create_product_analytics(request, pk):
         "user_info":str(get_location(request.META.get("REMOTE_ADDR", None))),
     }
     anayltics_obj = Analytics.objects.create(
-        content_object=product, info=json.dumps([user_info]), user=product.shop_rel.user
+        content_object=product, info=json.dumps(user_info), user=product.shop_rel.user
     )
     anayltics_obj.save()
     return Response(status=status.HTTP_200_OK)
@@ -77,7 +77,7 @@ def create_tags_analytics(request):
         "user_info": str(get_location(request.META.get("REMOTE_ADDR", None))),
     }
     analytics_obj = Analytics.objects.create(
-        url=request.data["url"], info=json.dumps([user_info])
+        url=request.data["url"], info=json.dumps(user_info)
     )
     analytics_obj.save()
     return Response(status=status.HTTP_200_OK)
