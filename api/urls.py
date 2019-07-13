@@ -13,10 +13,10 @@ app_name = 'api'
 
 urlpatterns = [
     *AUTH_URL,
-    *ANALYTICS_URL,
     *COMMERCE_URL,
     *CREATE_FEEDBACK,
     *COMMENT_URL,
+    *ANALYTICS_URL,
     *LESSON_URL,
     *STORE_URL,
 ]
