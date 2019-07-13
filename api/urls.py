@@ -13,11 +13,11 @@ from api.urls_route.store import STORE_URL
 app_name = 'api'
 
 urlpatterns = [
-    # *AUTH_URL,
-    # *ANALYTICS_URL,
-    # *COMMERCE_URL,
-    # *CREATE_FEEDBACK,
-    # *COMMENT_URL,
-    # *LESSON_URL,
-    # *STORE_URL,
+    *AUTH_URL,
+    *ANALYTICS_URL,
+    *COMMERCE_URL,
+    *CREATE_FEEDBACK,
+    *COMMENT_URL,
+    *LESSON_URL,
+    *STORE_URL,
 ]
