@@ -4,7 +4,7 @@ from ..views import analytics
 
 ANALYTICS_URL = [
     path(
-        "create_analytics_prod/<slug:pk>/",
+        "create_analytics_product/<slug:pk>/",
         analytics.create_product_analytics,
         name="create_product_analytics",
     ),
