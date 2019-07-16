@@ -15,4 +15,4 @@ def get_location(user_ip):
             user_ip
         )
     ).json()
-    return json.loads(get_user_info)
+    return get_user_info
