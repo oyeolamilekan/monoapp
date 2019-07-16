@@ -1,12 +1,10 @@
 import datetime
 
 from algoliasearch_django import raw_search
-from django.contrib.contenttypes.models import ContentType
 from rest_framework import pagination, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from analytics.models import Analytics
 from api.serializers.commerce import ProductSerializer
 from findit.models import Products
 from shop.models import Shop

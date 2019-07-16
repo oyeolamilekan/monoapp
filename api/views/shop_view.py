@@ -12,9 +12,9 @@ from findit.models import Products
 from shop.models import Shop
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def create_shop(request):
-    '''
+    """
     Creates a shop for the user
 
     Arguments:,
@@ -22,35 +22,28 @@ def create_shop(request):
 
     Returns:
         [JSON] -- [returns json if its is successful or not]
-    '''
+    """
 
-    shop = Shop.objects.filter(
-        title=request.data['shopName'].lower())
+    shop = Shop.objects.filter(title=request.data["shopName"].lower())
     if shop.exists():
-        return Response({
-            'is_exist': True,
-            'msg': 'This shop already exist'
-        })
+        return Response({"is_exist": True, "msg": "This shop already exist"})
     shop = Shop.objects.create(
-        title=request.data['shopName'].lower(),
-        category=request.data['shopCategory'],
-        phone_number=request.data['phoneNumber'],
-        user=request.user)
+        title=request.data["shopName"].lower(),
+        category=request.data["shopCategory"],
+        phone_number=request.data["phoneNumber"],
+        user=request.user,
+    )
     shop.save()
-    return Response({
-        'is_exist': False,
-        'msg': 'Success.',
-        'slug': shop.slug
-    })
+    return Response({"is_exist": False, "msg": "Success.", "slug": shop.slug})
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def shop_products(request):
-    '''Get the products assiociated with this user shop.
+    """Get the products assiociated with this user shop.
 
     Arguments:
         request {[request object]} -- [Used as a form of verification of a user authencity]
-    '''
+    """
 
     shop = Shop.objects.get(user=request.user)
     products = Products.objects.filter(shop_rel=shop)
@@ -61,95 +54,116 @@ def shop_products(request):
     return paginator.get_paginated_response(serializer.data)
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def create_product(request):
     shop_obj = Shop.objects.get(user=request.user)
     data_payload = {
-        'name': request.data['productName'],
-        'price': request.data['productPrice'],
-        'description': request.data['description'],
-        'genre': json.loads(request.data['tags']),
-        'image': request.data['file'],
-        'shop_slug': shop_obj.slug,
-        'shop_rel': shop_obj
+        "name": request.data["productName"],
+        "price": request.data["productPrice"],
+        "description": request.data["description"],
+        "genre": json.loads(request.data["tags"]),
+        "image": request.data["file"],
+        "shop_slug": shop_obj.slug,
+        "shop_rel": shop_obj,
     }
     products = Products.objects.create(**data_payload)
     products.save()
     products_serailzer = ProductSerializer(products)
-    return Response(data={'product': products_serailzer.data}, status=status.HTTP_201_CREATED)
+    return Response(
+        data={"product": products_serailzer.data}, status=status.HTTP_201_CREATED
+    )
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def create_tags(request):
     try:
         shop = Shop.objects.get(user=request.user)
-        cat_name = request.data['categoryName'].lower()
-        matches = [x for x in shop.categories if x['slug']
-                   == slugify(cat_name)]
+        cat_name = request.data["categoryName"].lower()
+        matches = [x for x in shop.categories if x["slug"] == slugify(cat_name)]
         data_payload = {
-            'name': cat_name,
-            'slug': slugify(cat_name+'-'+get_random_string(length=4)) if len(matches) > 0 else slugify(cat_name),
-            'public_slug': slugify(cat_name)
+            "name": cat_name,
+            "slug": slugify(cat_name + "-" + get_random_string(length=4))
+            if len(matches) > 0
+            else slugify(cat_name),
+            "public_slug": slugify(cat_name),
         }
         shop.categories = [*shop.categories, data_payload]
         shop.save()
         return Response(data=data_payload, status=status.HTTP_201_CREATED)
     except Exception as e:
         import traceback
+
         traceback.print_exc()
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_catergories(request):
+    """[Calculates the number of products left in each category]
+    
+    Arguments:
+        request {[type]} -- [description]
+    
+    Returns:
+        [Json] -- [returns a json type response]
+    """
     choosen_catergory = Shop.objects.get(user=request.user)
     shop_categories = choosen_catergory.categories
-    resp_payload = {'shop_categories': shop_categories}
+    value_added = list(
+        map(
+            lambda x: {
+                "name": x["slug"],
+                "product_count": Products.objects.filter(genre__slug=x["slug"]).count(),
+            },
+            shop_categories,
+        )
+    )
+    resp_payload = {"shop_categories": value_added}
     return Response(data=resp_payload, status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
+@api_view(["GET"])
 def get_info(request):
     user_info = Shop.objects.get(user=request.user)
     serializer = ShopSerializer(user_info)
     return Response(serializer.data)
 
 
-@api_view(['PUT'])
+@api_view(["PUT"])
 def save_info(request):
     user_info_obj = Shop.objects.get(user=request.user)
-    user_info_obj.address = request.data['address']
-    user_info_obj.description = request.data['description']
-    user_info_obj.phone_number = request.data['phoneNumber']
-    if request.data['logo']:
-        user_info_obj.logo = request.data['logo']
+    user_info_obj.address = request.data["address"]
+    user_info_obj.description = request.data["description"]
+    user_info_obj.phone_number = request.data["phoneNumber"]
+    if request.data["logo"]:
+        user_info_obj.logo = request.data["logo"]
     user_info_obj.save()
-    data_payload = {
-        'img': user_info_obj.logo.url if user_info_obj.logo else ''
-    }
+    data_payload = {"img": user_info_obj.logo.url if user_info_obj.logo else ""}
     return Response(status=status.HTTP_200_OK, data=data_payload)
 
 
-@api_view(['PUT'])
+@api_view(["PUT"])
 def edit_products(request):
     try:
-        products = Products.objects.get(id=request.data['id'])
-        products.name = request.data['productName']
-        products.price = request.data['productPrice']
-        products.description = request.data['description']
-        products.genre = json.loads(request.data['tags'])
-        if request.data['file']:
-            products.image = request.data['file']
+        products = Products.objects.get(id=request.data["id"])
+        products.name = request.data["productName"]
+        products.price = request.data["productPrice"]
+        products.description = request.data["description"]
+        products.genre = json.loads(request.data["tags"])
+        if request.data["file"]:
+            products.image = request.data["file"]
         products.save()
         products_serailzer = ProductSerializer(products)
-        return Response(status=status.HTTP_201_CREATED, data={'product': products_serailzer.data})
+        return Response(
+            status=status.HTTP_201_CREATED, data={"product": products_serailzer.data}
+        )
     except products.DoesNotExist:
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["DELETE"])
 def delete_products(request):
-    product_obj = Products.objects.get(id=request.data['id'])
+    product_obj = Products.objects.get(id=request.data["id"])
     if request.user == product_obj.shop_rel.user:
         product_obj.delete()
         return Response(status=status.HTTP_200_OK)
