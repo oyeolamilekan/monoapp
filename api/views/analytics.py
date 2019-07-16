@@ -61,7 +61,7 @@ def create_shop_analytics(request, pk):
         "user_info": get_location(get_client_ip(request)),
     }
     anayltics_obj = Analytics.objects.create(
-        content_object=shop, info=json.dumps([user_info]), user=shop.user
+        content_object=shop, info=user_info, user=shop.user
     )
     anayltics_obj.save()
     return Response(status=status.HTTP_200_OK)
@@ -78,7 +78,7 @@ def create_tags_analytics(request):
         "user_info": get_location(get_client_ip(request)),
     }
     analytics_obj = Analytics.objects.create(
-        url=request.data["url"], info=json.dumps([user_info])
+        url=request.data["url"], info=user_info
     )
     analytics_obj.save()
     return Response(status=status.HTTP_200_OK)
