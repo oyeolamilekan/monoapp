@@ -1,5 +1,5 @@
 import requests
-
+import json
 
 def get_location(user_ip):
     """[Returns a detailed info about the user]
@@ -15,4 +15,4 @@ def get_location(user_ip):
             user_ip
         )
     ).json()
-    return get_user_info
+    return json.loads(get_user_info)

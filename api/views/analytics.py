@@ -34,7 +34,7 @@ def create_product_analytics(request, pk):
         "user_info": get_location(get_client_ip(request)),
     }
     anayltics_obj = Analytics.objects.create(
-        content_object=product, info=json.dumps([user_info]), user=product.shop_rel.user
+        content_object=product, info=user_info, user=product.shop_rel.user
     )
     anayltics_obj.save()
     return Response(status=status.HTTP_200_OK)
