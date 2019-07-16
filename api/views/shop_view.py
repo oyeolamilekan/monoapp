@@ -112,7 +112,8 @@ def get_catergories(request):
     value_added = list(
         map(
             lambda x: {
-                "name": x["slug"],
+                "name": x["name"],
+                "slug": x["slug"],
                 "product_count": Products.objects.filter(genre__slug=x["slug"]).count(),
             },
             shop_categories,
