@@ -26,3 +26,6 @@ class Analytics(BaseModel):
 
     def __str__(self):
         return "View objects"
+    
+    class Meta:
+        ordering = ['-created']
