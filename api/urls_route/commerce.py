@@ -13,4 +13,5 @@ COMMERCE_URL = [
     path('get_info/', shop_view.get_info, name='get_info'),
     path('save_info/', shop_view.save_info, name='save_info'),
     path('edit_products/', shop_view.edit_products, name='edit_produts'),
+    path('delete_tags/', shop_view.delete_tags, name='delete_tags')
 ]

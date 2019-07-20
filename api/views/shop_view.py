@@ -58,7 +58,7 @@ def shop_products(request):
 def create_product(request):
     shop_obj = Shop.objects.get(user=request.user)
     tags = json.loads(request.data["tags"])
-    del tags['product_count']
+    del tags["product_count"]
     data_payload = {
         "name": request.data["productName"],
         "price": request.data["productPrice"],
@@ -109,14 +109,15 @@ def get_catergories(request):
     Returns:
         [Json] -- [returns a json type response]
     """
-    choosen_catergory = Shop.objects.get(user=request.user)
-    shop_categories = choosen_catergory.categories
+    shop_obj = Shop.objects.get(user=request.user)
+    shop_categories = shop_obj.categories
     value_added = list(
         map(
             lambda x: {
                 "name": x["name"],
                 "slug": x["slug"],
-                "product_count": Products.objects.filter(genre__slug=x["slug"]).count(),
+                "public_slug": x["public_slug"],
+                "product_count": Products.objects.filter(shop_rel=shop_obj,genre__slug=x["slug"]).count(),
             },
             shop_categories,
         )
@@ -172,3 +173,16 @@ def delete_products(request):
         return Response(status=status.HTTP_200_OK)
 
     return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(["DELETE"])
+def delete_tags(request):
+    shop_obj = Shop.objects.get(user=request.user)
+    tags = request.data
+    del tags["product_count"]
+    tag_index = shop_obj.categories.index(request.data)
+    del shop_obj.categories[tag_index]
+    shop_obj.save()
+    product_obj = Products.objects.filter(shop_rel=shop_obj, genre__slug=tags["slug"])
+    product_obj.delete()
+    return Response(status=status.HTTP_200_OK)
