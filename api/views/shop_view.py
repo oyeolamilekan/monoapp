@@ -57,11 +57,13 @@ def shop_products(request):
 @api_view(["POST"])
 def create_product(request):
     shop_obj = Shop.objects.get(user=request.user)
+    tags = json.loads(request.data["tags"])
+    del tags['product_count']
     data_payload = {
         "name": request.data["productName"],
         "price": request.data["productPrice"],
         "description": request.data["description"],
-        "genre": json.loads(request.data["tags"]),
+        "genre": tags,
         "image": request.data["file"],
         "shop_slug": shop_obj.slug,
         "shop_rel": shop_obj,
