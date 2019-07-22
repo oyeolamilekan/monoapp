@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     "lessons",
     "findit",
     "shop",
+    "seo",
     "tags",
 ]
 
