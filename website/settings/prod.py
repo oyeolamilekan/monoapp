@@ -9,7 +9,8 @@ DATABASES = {
         "USER": "oyeolalekan",
         "PASSWORD": "oyeolamilekan",
         "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "PORT": "",
     }
 }
+
 FRONTEND_URL = "https://shopstack.co"
