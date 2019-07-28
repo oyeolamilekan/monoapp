@@ -8,11 +8,15 @@ https://docs.djangoproject.com/en/2.1/howto/deployment/wsgi/
 """
 
 import os
+import platform
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'website.settings.local')
-
+if platform.system() == 'Linux':
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'website.settings.prod')
+else:
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'website.settings.local')
+    
 application = get_wsgi_application()
 
 if os.getcwd() == '/app':
