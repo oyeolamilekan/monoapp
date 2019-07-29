@@ -1,6 +1,10 @@
+"""
+    This is production environment setting for the backend
+"""
 from .base import *
 
 DEBUG = False
+
 ALLOWED_HOSTS = ["kirr.xyz"]
 
 DATABASES = {

@@ -1,3 +1,7 @@
+"""
+    This is local dev setting for the backend
+"""
+
 from .base import *
 
 DEBUG = True
