@@ -52,7 +52,7 @@ def get_shop_products(request, slug, cat):
     """
     try:
         shop = Shop.objects.get(slug=slug)
-        products = Products.objects.filter(shop_rel=shop)
+        products = Products.objects.filter(shop_rel=shop).order_by('?')
         shop_slugs = list(map(lambda x: x["slug"], shop.categories))
         if not shop.categories:
             products = []

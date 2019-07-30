@@ -46,7 +46,7 @@ def shop_products(request):
     """
 
     shop = Shop.objects.get(user=request.user)
-    products = Products.objects.filter(shop_rel=shop).order_by('?')
+    products = Products.objects.filter(shop_rel=shop)
     paginator = pagination.PageNumberPagination()
     paginator.page_size = 10
     result_page = paginator.paginate_queryset(products, request=request)
