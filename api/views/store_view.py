@@ -59,7 +59,7 @@ def get_shop_products(request, slug, cat):
         elif cat in shop_slugs:
             products = products.filter(genre__slug=cat)
         paginator = pagination.PageNumberPagination()
-        paginator.page_size = 6
+        paginator.page_size = 12
         result_page = paginator.paginate_queryset(products, request=request)
         serializer = ProductSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
