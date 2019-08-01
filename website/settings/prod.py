@@ -5,9 +5,8 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["https://kirr.xyz"]
+ALLOWED_HOSTS = ["kirr.xyz"]
 
-SECURE_SSL_REDIRECT = True
 
 DATABASES = {
     "default": {
