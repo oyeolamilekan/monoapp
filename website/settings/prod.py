@@ -7,6 +7,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["kirr.xyz"]
 
+SECURE_SSL_REDIRECT = True
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",

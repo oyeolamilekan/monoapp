@@ -9,12 +9,12 @@ from lessons.models import Lesson
 @api_view(["POST"])
 def create_comment(request, slug, content_type):
     """
-    [This view creates the comments by geting the kind of data that needs to be created under]
+    [This view creates the comments by geting the content type that needs to be created under]
     
     Arguments:
-        request {[ request objects ]} -- [ The request response from python]
-        slug {[ string ]} -- [Used to filter the models where the comments would relate to]
-        content_type {[ string ]} -- [Checks the kind of model that needs to written underneath]
+        request {[ request objects ]} -- [The request sent from the client]
+        slug {[ string ]} -- [Used to filter the model objects comments would relate to]
+        content_type {[ string ]} -- [Checks the kind of model that would be related to the comment object]
     
     Returns:
         [Json] -- [It returns a json response]

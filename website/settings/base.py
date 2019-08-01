@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "shop",
     "seo",
     "tags",
+    "referal"
 ]
 
 SITE_ID = 1
