@@ -5,8 +5,6 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["kirr.xyz"]
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
