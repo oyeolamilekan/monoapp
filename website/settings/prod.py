@@ -5,7 +5,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["kirr.xyz"]
+ALLOWED_HOSTS = ["https://kirr.xyz"]
 
 SECURE_SSL_REDIRECT = True
 
