@@ -2,7 +2,8 @@ from django.db import models
 from django.utils.crypto import get_random_string
 from basemodel.base_model import BaseModel
 from django.db.models.signals import pre_save
-from shop.models import Shop
+from accounts.models import User
+
 # Create your models here.
 
 
@@ -16,7 +17,7 @@ class Referal(BaseModel):
     Returns:
         [type] -- [description]
     """
-    shop = models.ForeignKey(Shop, on_delete=False)
+    user = models.OneToOneField(User, on_delete=True, null=True)
     user_name = models.CharField(max_length=200)
     tracking_id = models.CharField(max_length=200)
     total_traffic = models.IntegerField(default=0)
