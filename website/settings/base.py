@@ -1,4 +1,5 @@
 import os
+
 # import platform
 from decouple import config
 
@@ -11,7 +12,7 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config("SECRET_KEY")
 
 ALLOWED_HOSTS = ["kirr.xyz", "127.0.0.1", "www.kirr.xyz"]
 
@@ -20,11 +21,11 @@ CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = "shopstack.co"
 
 ALGOLIA = {
-    "APPLICATION_ID": config('ALGOLIA_APP_ID'),
-    "API_KEY": config('ALGOLIA_API_KEY'),
+    "APPLICATION_ID": config("ALGOLIA_APP_ID"),
+    "API_KEY": config("ALGOLIA_API_KEY"),
 }
 
-INSTALLED_APPS = [
+DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -32,7 +33,9 @@ INSTALLED_APPS = [
     "django.contrib.sites",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # Third party apps
+]
+
+THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
@@ -41,7 +44,9 @@ INSTALLED_APPS = [
     "cloudinary_storage",
     "cloudinary",
     "algoliasearch_django",
-    # Internal apps
+]
+
+INTERNAL_APPS = [
     "accounts",
     "api",
     "analytics",
@@ -52,7 +57,16 @@ INSTALLED_APPS = [
     "shop",
     "seo",
     "tags",
-    "referal"
+    "referal",
+]
+
+INSTALLED_APPS = [
+    # Django core app
+    *DJANGO_APPS,
+    # Third party apps
+    *THIRD_PARTY_APPS,
+    # Internal apps
+    *INTERNAL_APPS
 ]
 
 SITE_ID = 1
@@ -92,9 +106,9 @@ TEMPLATES = [
 WSGI_APPLICATION = "website.wsgi.application"
 
 CLOUDINARY_STORAGE = {
-    "CLOUD_NAME": config('CLOUD_NAME'),
-    "API_KEY": config('CLOUDINARY_API_KEY'),
-    "API_SECRET": config('CLOUDINARY_API_SECRET'),
+    "CLOUD_NAME": config("CLOUD_NAME"),
+    "API_KEY": config("CLOUDINARY_API_KEY"),
+    "API_SECRET": config("CLOUDINARY_API_SECRET"),
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -108,9 +122,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Email settings
 EMAIL_BACKEND = "sendgrid_backend.SendgridBackend"
-SENDGRID_API_KEY = config('SENDGRID_KEY')
-SENDGRID_SANDBOX_MODE_IN_DEBUG=False
-SENDGRID_ECHO_TO_STDOUT=False
+SENDGRID_API_KEY = config("SENDGRID_KEY")
+SENDGRID_SANDBOX_MODE_IN_DEBUG = False
+SENDGRID_ECHO_TO_STDOUT = False
 
 AUTH_USER_MODEL = "accounts.User"
 
@@ -139,8 +153,8 @@ DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATIC_URL = "/static/"
 
 # Extra places for collectstatic to find static files.
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static_in"),)
+STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
