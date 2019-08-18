@@ -66,18 +66,23 @@ class RegisterAPI(generics.GenericAPIView):
         )
 
 
-# Login api
 
 
 class LoginAPI(generics.GenericAPIView):
+    """[summary]
+    
+    Arguments:
+        generics {[type]} -- [description]
+    
+    Returns:
+        [type] -- [description]
+    """
     serializer_class = LoginSerializer
 
     def post(self, request):
         """[summary]
-
         Arguments:
             request {[type]} -- [description]
-
         Returns:
             [type] -- [description]
         """
@@ -141,7 +146,6 @@ class ChangePasswordView(generics.UpdateAPIView):
 def create_token(request):
     """
     [Creates the auth token that will be used to validate user]
-    
     Arguments:
         request {[type]} -- [description]
     """
@@ -164,7 +168,6 @@ def create_token(request):
 @api_view(["GET"])
 def verify_token(request, token):
     """[Verifies if the token is valid or not]
-    
     Arguments:
         request {[ request object ]} -- [the standard request object from django]
         token {[ string ]} -- [the token sent from the frontend]

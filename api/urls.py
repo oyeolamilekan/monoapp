@@ -9,7 +9,7 @@ from api.urls_route.commerce import COMMERCE_URL
 from api.urls_route.feedback import CREATE_FEEDBACK
 from api.urls_route.lesson import LESSON_URL
 from api.urls_route.store import STORE_URL
-
+from api.urls_route.allies import ALLIES_URL
 app_name = 'api'
 
 urlpatterns = [
@@ -20,4 +20,5 @@ urlpatterns = [
     *COMMENT_URL,
     *LESSON_URL,
     *STORE_URL,
+    *ALLIES_URL
 ]

@@ -117,7 +117,9 @@ def get_catergories(request):
                 "name": x["name"],
                 "slug": x["slug"],
                 "public_slug": x["public_slug"],
-                "product_count": Products.objects.filter(shop_rel=shop_obj,genre__slug=x["slug"]).count(),
+                "product_count": Products.objects.filter(
+                    shop_rel=shop_obj, genre__slug=x["slug"]
+                ).count(),
             },
             shop_categories,
         )

@@ -100,14 +100,15 @@ def get_product_clicks(request, pk):
     ]
     day_set = json.dumps({"data": day_set})
     data_set = json.dumps({"data": data_set})
+    print(day_set, data_set)
     return Response(
         status=status.HTTP_200_OK, data={"data_set": data_set, "day_set": day_set}
     )
 
 
 @api_view(["GET"])
-def get_shop_views(request, pk):
-    shop = Shop.objects.get(slug=pk)
+def get_shop_views(request):
+    shop = Shop.objects.get(user=request.user)
     analytics_obj = (
         shop.analytics.extra({"created": "date(created)"})
         .values("created")
@@ -119,8 +120,6 @@ def get_shop_views(request, pk):
         datetime.datetime.strptime(str(obj_["created"]), "%Y-%m-%d").strftime("%a")
         for obj_ in analytics_obj
     ]
-    day_set = json.dumps({"data": day_set})
-    data_set = json.dumps({"data": data_set})
     return Response(
         status=status.HTTP_200_OK, data={"data_set": data_set, "day_set": day_set}
     )
@@ -135,5 +134,5 @@ def get_product_clicked(request):
         {"name": analytic.content_object.name, "id": str(analytic.content_object.id)}
         for analytic in analytics
     ]
-    data = json.dumps(products_list)
+    data = products_list[:20]
     return Response(status=status.HTTP_200_OK, data=data)
