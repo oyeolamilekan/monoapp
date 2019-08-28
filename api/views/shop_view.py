@@ -1,3 +1,7 @@
+"""
+    This is view is meant to handle of the user shop.
+"""
+
 import json
 
 from django.utils.crypto import get_random_string
@@ -48,7 +52,7 @@ def shop_products(request):
     shop = Shop.objects.get(user=request.user)
     products = Products.objects.filter(shop_rel=shop)
     paginator = pagination.PageNumberPagination()
-    paginator.page_size = 10
+    paginator.page_size = 7
     result_page = paginator.paginate_queryset(products, request=request)
     serializer = ProductSerializer(result_page, many=True)
     return paginator.get_paginated_response(serializer.data)
@@ -56,7 +60,15 @@ def shop_products(request):
 
 @api_view(["POST"])
 def create_product(request):
+    """
+    The create product for the shop instance
+    Arguments:
+        request {[ request object ]} -- this is a standard request object from django
+    Returns:
+        JSON -- returns a json response and info
+    """
     shop_obj = Shop.objects.get(user=request.user)
+    print(request.data)
     tags = json.loads(request.data["tags"])
     del tags["product_count"]
     data_payload = {
@@ -68,7 +80,9 @@ def create_product(request):
         "shop_slug": shop_obj.slug,
         "shop_rel": shop_obj,
     }
+    # Create an instance of the product
     products = Products.objects.create(**data_payload)
+    # Save the product into the database
     products.save()
     products_serailzer = ProductSerializer(products)
     return Response(
@@ -78,15 +92,22 @@ def create_product(request):
 
 @api_view(["POST"])
 def create_tags(request):
+    """
+    Creates tags to be track products created
+    Arguments:
+        request { request object } -- Django request objects
+    Returns:
+        JSON -- returns a json response and info
+    """
     try:
         shop = Shop.objects.get(user=request.user)
         cat_name = request.data["categoryName"].lower()
         matches = [x for x in shop.categories if x["slug"] == slugify(cat_name)]
+        if matches:
+            return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         data_payload = {
             "name": cat_name,
-            "slug": slugify(cat_name + "-" + get_random_string(length=4))
-            if len(matches) > 0
-            else slugify(cat_name),
+            "slug": slugify(cat_name),
             "public_slug": slugify(cat_name),
         }
         shop.categories = [*shop.categories, data_payload]
@@ -101,11 +122,10 @@ def create_tags(request):
 
 @api_view(["GET"])
 def get_catergories(request):
-    """[Calculates the number of products left in each category]
-    
+    """
+    Calculates the number of products left in each category
     Arguments:
         request {[type]} -- [description]
-    
     Returns:
         [Json] -- [returns a json type response]
     """
@@ -130,6 +150,13 @@ def get_catergories(request):
 
 @api_view(["GET"])
 def get_info(request):
+    """
+    [summary]
+    Arguments:
+        request {[type]} -- [description]
+    Returns:
+        [type] -- [description]
+    """
     user_info = Shop.objects.get(user=request.user)
     serializer = ShopSerializer(user_info)
     return Response(serializer.data)
@@ -137,6 +164,13 @@ def get_info(request):
 
 @api_view(["PUT"])
 def save_info(request):
+    """
+    [summary]
+    Arguments:
+        request {[type]} -- [description]
+    Returns:
+        [type] -- [description]
+    """
     user_info_obj = Shop.objects.get(user=request.user)
     user_info_obj.address = request.data["address"]
     user_info_obj.description = request.data["description"]
@@ -150,6 +184,13 @@ def save_info(request):
 
 @api_view(["PUT"])
 def edit_products(request):
+    """
+    [summary]
+    Arguments:
+        request {[type]} -- [description]
+    Returns:
+        [type] -- [description]
+    """
     try:
         products = Products.objects.get(id=request.data["id"])
         products.name = request.data["productName"]
@@ -169,6 +210,15 @@ def edit_products(request):
 
 @api_view(["DELETE"])
 def delete_products(request):
+    """
+    This view deletes the product from the database.
+
+    Arguments:
+        request { Django request object } -- this is the default request object.
+    Returns:
+        status -- It returns a status of success, if the user is authorized
+        or faliure if they aren't authorized
+    """
     product_obj = Products.objects.get(id=request.data["id"])
     if request.user == product_obj.shop_rel.user:
         product_obj.delete()
@@ -178,7 +228,33 @@ def delete_products(request):
 
 
 @api_view(["DELETE"])
+def delete_products_mobile(request, p_k):
+    """
+    This view deletes the product from the database. `Used only by the mobile app`
+
+    Arguments:
+        request { Django request object } -- this is the default request object.
+    Returns:
+        status -- It returns a status of success, if the user is authorized
+        or faliure if they aren't authorized
+    """
+    product_obj = Products.objects.get(id=p_k)
+    if request.user == product_obj.shop_rel.user:
+        product_obj.delete()
+        return Response(status=status.HTTP_200_OK)
+
+    return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+@api_view(["DELETE"])
 def delete_tags(request):
+    """
+    [summary]
+    Arguments:
+        request {[type]} -- [description]
+    Returns:
+        [type] -- [description]
+    """
     shop_obj = Shop.objects.get(user=request.user)
     tags = request.data
     del tags["product_count"]

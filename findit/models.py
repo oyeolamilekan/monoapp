@@ -24,7 +24,7 @@ class Products(BaseModel):
     num_of_clicks = models.IntegerField(default=0)
     description = models.TextField(blank=True, null=True)
     shop_slug = models.CharField(
-        max_length=200, blank=True, null=True, default='')
+        max_length=250, blank=True, null=True, default='')
     genre = JSONField(default=dict)
     analytics = GenericRelation(Analytics)
 
