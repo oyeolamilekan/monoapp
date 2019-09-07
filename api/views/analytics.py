@@ -100,7 +100,6 @@ def get_product_clicks(request, pk):
     ]
     day_set = json.dumps({"data": day_set})
     data_set = json.dumps({"data": data_set})
-    print(day_set, data_set)
     return Response(
         status=status.HTTP_200_OK, data={"data_set": data_set, "day_set": day_set}
     )

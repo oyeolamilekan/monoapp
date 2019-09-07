@@ -29,8 +29,8 @@ class ShopFactory(DjangoModelFactory):
     address = Faker('name')
     phone_number = '08037452103'
     description = Faker('text')
-    categories = random.choice([[{"name": "nnnn jkj", "slug": "nnnn-jkj", "public_slug": "nnnn-jkj"}],
-                                [{"name": "phones", "slug": "phones", "public_slug": "phones"}]])
+    categories = random.choice([[{"name": "nnnn jkj", "slug": "nnnn-jkj", "public_slug": "nnnn-jkj", "product_count": 1}],
+                                [{"name": "phones", "slug": "phones", "public_slug": "phones", "product_count":0}]])
     id = str(uuid.uuid1())
     
 

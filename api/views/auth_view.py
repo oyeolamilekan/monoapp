@@ -2,7 +2,7 @@
     [This view handles the authentication part of the app.]
 """
 import uuid
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.core.exceptions import ObjectDoesNotExist
 
 from django.utils import timezone
@@ -26,25 +26,27 @@ from utilcode.msg.send_reset_password import send_reset_email
 
 
 class RegisterAPI(generics.GenericAPIView):
-    """[This Class based view handles the registration functionality]
+    """
+    This Class based view handles the registration functionality
 
     Arguments:
-        generics {[type]} -- [description]
+        GenericAPIView { APIView } -- Allow you to build API that maped closely to the database
 
     Returns:
-        [JSON] -- [It returns json objects based on the action taking by user]
+        JSON -- It returns json objects based on the action taking by user
     """
 
     serializer_class = RegisterSerializer
 
     def post(self, request):
-        """[This method recives the request from the user and processes it]
+        """
+        This method recives the request from the user and processes it
 
         Arguments:
-            request {[request object]} -- [The request sent by the user]
+            request {request object} -- The request sent by the user
 
         Returns:
-            [JSON] -- [returns json reponse with the needed crendentials]
+            JSON -- returns json reponse with the needed crendentials
         """
 
         if len(request.data["password"]) <= 5:
@@ -66,21 +68,22 @@ class RegisterAPI(generics.GenericAPIView):
         )
 
 
-
-
 class LoginAPI(generics.GenericAPIView):
-    """[summary]
-    
-    Arguments:
-        generics {[type]} -- [description]
-    
-    Returns:
-        [type] -- [description]
     """
+    This Class based view handles the registration functionality
+
+    Arguments:
+        GenericAPIView { APIView } -- Allow you to build API that maped closely to the database
+
+    Returns:
+        JSON -- returns json reponse with the needed information
+    """
+
     serializer_class = LoginSerializer
 
     def post(self, request):
-        """[summary]
+        """
+        [summary]
         Arguments:
             request {[type]} -- [description]
         Returns:
@@ -120,6 +123,13 @@ class ChangePasswordView(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def get_object(self, queryset=None):
+        """
+        summary
+        Keyword Arguments:
+            queryset {[type]} -- [description] (default: {None})
+        Returns:
+            [type] -- [description]
+        """
         obj = self.request.user
         return obj
 
@@ -145,9 +155,9 @@ class ChangePasswordView(generics.UpdateAPIView):
 @api_view(["POST"])
 def create_token(request):
     """
-    [Creates the auth token that will be used to validate user]
+    Creates the auth token that will be used to validate user
     Arguments:
-        request {[type]} -- [description]
+        request {django request object} -- inherit django request object
     """
     try:
         email = request.data["email"]
@@ -167,10 +177,11 @@ def create_token(request):
 
 @api_view(["GET"])
 def verify_token(request, token):
-    """[Verifies if the token is valid or not]
+    """
+    Verifies if the token is valid or not
     Arguments:
-        request {[ request object ]} -- [the standard request object from django]
-        token {[ string ]} -- [the token sent from the frontend]
+        request {request object} -- [the standard request object from django]
+        token {string} -- [the token sent from the frontend]
     """
     try:
         token = ResetToken.objects.get(token=token)
@@ -184,7 +195,14 @@ def verify_token(request, token):
 
 @api_view(["POST"])
 def change_password(request):
-    user_auth = ResetToken.objects.get(token=request.data['token'])
+    """
+    This api view changes the password of the user.
+    Arguments:
+        request {[type]} -- [description]
+    Returns:
+        [type] -- [description]
+    """
+    user_auth = ResetToken.objects.get(token=request.data["token"])
     user_obj = User.objects.get(id=user_auth.user.id)
     user_obj.set_password(request.data["password"])
     user_obj.save()

@@ -9,7 +9,7 @@ from ..utils import get_token
 
 class WhenUserCreatesFeedback(TestCase):
     """
-        [Test if user can create a feedback]
+    Test if user can create a feedback
 
     Arguments:
         TestCase {[type]} -- [description]
@@ -31,6 +31,9 @@ class WhenUserCreatesFeedback(TestCase):
         )
 
     def test_request_status(self):
+        """
+        Check if the action was successful
+        """
         assert self.response.status_code == 201
 
     def test_feedback_created(self):

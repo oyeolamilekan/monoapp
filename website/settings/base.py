@@ -1,6 +1,8 @@
+"""
+Base settings of the django application
+"""
 import os
 
-# import platform
 from decouple import config
 
 
@@ -65,7 +67,7 @@ INSTALLED_APPS = [
     # Third party apps
     *THIRD_PARTY_APPS,
     # Internal apps
-    *INTERNAL_APPS
+    *INTERNAL_APPS,
 ]
 
 SITE_ID = 1
@@ -141,9 +143,8 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.TokenAuthentication",
     ),
-    "TEST_REQUEST_DEFAULT_FORMAT": "json"
-    # 'DEFAULT_PERMISSION_CLASSES': (
-    #     'rest_framework.permissions.IsAuthenticated', )
+    "TEST_REQUEST_DEFAULT_FORMAT": "json",
+    # "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
 
 MEDIA_URL = "/media/"  # or any prefix you choose

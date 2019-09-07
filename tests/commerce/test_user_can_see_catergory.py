@@ -35,4 +35,4 @@ class WhenUserGetCategory(TestCase):
         """
             [Check if the tags are created]
         """
-        assert self.shop.categories == self.response.json()["shop_categories"]
+        assert self.shop.categories[0] == self.response.json()["shop_categories"][0]

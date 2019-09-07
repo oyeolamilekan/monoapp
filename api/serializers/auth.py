@@ -6,6 +6,16 @@ from accounts.models import User
 
 
 class LoginSerializer(Serializer):
+    """
+    Converts the django object to a json serializable
+    Arguments:
+        Serializer {Serializer} -- [description]
+    Raises:
+        ValidationError: [description]
+    
+    Returns:
+        [type] -- [description]
+    """
     email = CharField()
     password = CharField()
 

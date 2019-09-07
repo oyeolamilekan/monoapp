@@ -22,6 +22,6 @@ class WhenUserCreateShopTags(TestCase):
 
     def test_status_code(self):
         """
-            [checks the status code]
+            checks the status code
         """
         assert self.response.status_code == 201

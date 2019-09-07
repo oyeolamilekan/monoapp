@@ -8,9 +8,10 @@ def send_reset_email(email, link):
         message = "Kindly click the link to reset password {}/commerce/reset-change/{}".format(
             settings.FRONTEND_URL, link
         )
-        email_from = 'oye@shopstack.co'
+        email_from = 'admin@shopstack.co'
         recipient_list = [email]
-        send_mail(subject, message, email_from, recipient_list)
+        print(email)
+        print(send_mail(subject, message, email_from, recipient_list))
         return True
     except Exception as identifier:
         print(identifier)

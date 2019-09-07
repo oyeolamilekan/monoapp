@@ -9,6 +9,8 @@ from django.utils.text import slugify
 from rest_framework import pagination, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.parsers import MultiPartParser
+from rest_framework.decorators import parser_classes
 
 from api.serializers.commerce import ProductSerializer
 from api.serializers.store import ShopSerializer
@@ -68,7 +70,6 @@ def create_product(request):
         JSON -- returns a json response and info
     """
     shop_obj = Shop.objects.get(user=request.user)
-    print(request.data)
     tags = json.loads(request.data["tags"])
     del tags["product_count"]
     data_payload = {
@@ -165,7 +166,8 @@ def get_info(request):
 @api_view(["PUT"])
 def save_info(request):
     """
-    [summary]
+    This method saves the user info from the edit profile
+    component
     Arguments:
         request {[type]} -- [description]
     Returns:

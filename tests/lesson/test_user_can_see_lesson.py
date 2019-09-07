@@ -33,6 +33,6 @@ class WhenUserGetLessons(TestCase):
 
     def test_lesson_returned(self):
         """
-            [Check if the products are created]
+            [Check if the lesson are created]
         """
         assert Lesson.objects.all().count() == 1
